@@ -1,36 +1,31 @@
 import os
-import srt
-from TTS.api import TTS
 
 class SRT2SpeechNode:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "srt_path": ("STRING", {"default": "subtitle.srt"}),
-                "output_dir": ("STRING", {"default": "output_audio"})
+                "folder_path": ("STRING", {
+                    "default": "D:/MyStuff/srt_uploads",
+                    "multiline": False
+                })
+            },
+            "optional": {
+                "refresh_list": (["Refresh"],)
             }
         }
 
     RETURN_TYPES = ("STRING",)
-    FUNCTION = "srt_to_speech"
-    CATEGORY = "Audio"
+    FUNCTION = "read_srt"
+    CATEGORY = "Custom"
 
-    def srt_to_speech(self, srt_path, output_dir):
-        # อ่านไฟล์ .srt
-        with open(srt_path, "r", encoding="utf-8") as f:
-            subs = list(srt.parse(f.read()))
+    def read_srt(self, folder_path, refresh_list="Refresh"):
+        try:
+            srt_files = [f for f in os.listdir(folder_path) if f.lower().endswith(".srt")]
+            if not srt_files:
+                return ("No .srt files found in folder.",)
 
-        # สร้างโฟลเดอร์สำหรับไฟล์เสียง
-        os.makedirs(output_dir, exist_ok=True)
-
-        # โหลดโมเดล TTS
-        tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
-
-        # แปลงแต่ละข้อความเป็นเสียง
-        for i, sub in enumerate(subs):
-            text = sub.content
-            audio_path = os.path.join(output_dir, f"segment_{i}.wav")
-            tts.tts_to_file(text=text, file_path=audio_path)
-
-        return (f"Audio files saved in {output_dir}",)
+            options = "\n".join(srt_files)
+            return (f"Found SRT files:\n{options}\n(Use a dropdown selector version to load one)",)
+        except Exception as e:
+            return (f"Error accessing folder: {e}",)
