@@ -2,7 +2,7 @@
 ComfyUI_srt2speech​
 
 
-## TESTING
+## For my personal TESTING repo!
 Install this custom node in custom manager ComfyUI-MegaTTS <br>
 
 ไปใน custom node, pip install -r requirements.ext <br>
