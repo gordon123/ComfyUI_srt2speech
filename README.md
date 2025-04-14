@@ -22,10 +22,10 @@ now it ready to do Text2speech <br>
 ===== to create your own voice model === <br>
 
 I use Audacity to record myself about 10-15sec <br>
-export with mono, 16 - 24 kHz and upload here https://drive.google.com/drive/folders/1gCWL1y_2xu9nIFhUX_OW5MbcFuB7J5Cl <br>
-support only Eng, Chinese  <br>
+export "*.wav" with mono, 16 - 24 kHz and upload here "wav_queue" folder of Google drive https://drive.google.com/drive/folders/1gCWL1y_2xu9nIFhUX_OW5MbcFuB7J5Cl <br>
+support only Eng, Chinese  <br> 
 
-wait a few days you will get your file with .npy here https://drive.google.com/drive/folders/1QhcHWcy20JfqWjgqZX1YM3I6i9u4oNlr <br>
+wait a few days you will get your file with .npy here "user_batch_1" https://drive.google.com/drive/folders/1QhcHWcy20JfqWjgqZX1YM3I6i9u4oNlr <br>
 
 
 
