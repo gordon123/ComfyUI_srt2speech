@@ -1,0 +1,156 @@
+1
+00:00:00,160 --> 00:00:03,160
+
+
+2
+00:00:37,441 --> 00:00:45,065
+Installing ComfyUI
+
+3
+00:00:45,065 --> 00:00:51,719
+Let's see what I wrote. From point 1, download the Install file, which if
+
+4
+00:00:51,719 --> 00:00:57,600
+My friends just came in. My installation file is stored in this script file folder.
+
+5
+00:00:57,600 --> 00:01:01,800
+Friends come here f Install vui on Run port
+
+6
+00:01:01,800 --> 00:01:09,360
+Here, all the scripts are ready. My friends can download them and use them. Just press
+
+7
+00:01:09,360 --> 00:01:12,159
+Download here
+
+8
+00:01:12,920 --> 00:01:21,479
+If you look closely, the file looks similar to the file used in Google Colab, but
+
+9
+00:01:21,479 --> 00:01:27,320
+The codes are not very similar, so they cannot be used together. Google calab must be used with colab.
+
+10
+00:01:27,320 --> 00:01:33,320
+Runpod is used with Runpod, which I wrote specifically for use with Runpod.
+
+11
+00:01:33,320 --> 00:01:41,840
+So when we get here, we have a simple method, we download the file that we downloaded.
+
+12
+00:01:41,840 --> 00:01:48,759
+Then, just throw this file in here. Right? Drag it here. You will see a green frame in here.
+
+13
+00:01:48,759 --> 00:01:56,360
+Oh, throw the dots in the frame. So when it's done, the file will be in here, which is the file.
+
+14
+00:01:56,360 --> 00:02:02,799
+It's a small file, it's a script, the text isn't very big, just double-click it to open it.
+
+15
+00:02:02,799 --> 00:02:11,599
+This will all look similar to colab if you've ever used Google colab.
+
+16
+00:02:11,599 --> 00:02:17,840
+It will be a cell called cell 1 with the number 1 in it, which is the script.
+
+17
+00:02:17,840 --> 00:02:23,000
+What I wrote here is like a comment, which has no script to read.
+
+18
+00:02:23,000 --> 00:02:29,200
+Write it as a general note and then in the second cell, your friends will have this. Note that if we press
+
+19
+00:02:29,200 --> 00:02:34,680
+When will there be a blue bar next to it? It's activated in this script, right? So let's go back.
+
+20
+00:02:34,680 --> 00:02:43,280
+Go to Code script 1 and go back and look at the manual. What I did was Chapter 2 here.
+
+21
+00:02:43,280 --> 00:02:50,480
+So the download is complete, upload the file to Jupiter lab, that's what we did earlier.
+
+22
+00:02:50,480 --> 00:02:57,239
+What I'm going to show you is just throw it in. Let's start running the script. It's that simple.
+
+23
+00:02:57,239 --> 00:03:02,239
+Run the script, press activate this cell once, anywhere, so that it blinks.
+
+24
+00:03:02,239 --> 00:03:09,159
+Blink, see the blue bar next to it, then press the run button, it's here, friends.
+
+25
+00:03:09,159 --> 00:03:16,799
+Look at the picture and follow the steps. Make it the same by pressing the button. If anyone can't hear it in time, you can go back and watch it again.
+
+26
+00:03:16,799 --> 00:03:21,040
+Press "Beep" processing setup Complete
+
+27
+00:03:21,040 --> 00:03:28,519
+Ah, go to Next Step, which means the first step will be completed quickly, then press ah, step 2 is
+
+28
+00:03:28,519 --> 00:03:34,840
+In cell 2, right? Or look at the example here, which is to start running the script in the cell.
+
+29
+00:03:34,840 --> 00:03:43,120
+2. Click this and press Run. This script is now cloning.
+
+30
+00:03:43,120 --> 00:03:49,640
+repo of comfy ui, guys, notice that it will download the folder comfy.
+
+31
+00:03:49,640 --> 00:03:54,680
+ui is like that, so step 1 compete, if you want to continue or not, press Yes No, right?
+
+32
+00:03:54,680 --> 00:04:00,840
+Let your friends type the word Yes YES and press Enter, which is considered to be the completion of this step.
+
+33
+00:04:00,840 --> 00:04:08,720
+confirm is step 2. Next is this. I'm explaining that step 2 is when we clone.
+
+34
+00:04:08,720 --> 00:04:16,519
+confyui comes from repo, right? Repo is me. Git clone. If anyone installs in Git, it's Git.
+
+35
+00:04:16,519 --> 00:04:23,880
+Clone comes from git Clone. This is from the official Comfy UI website.
+
+36
+00:04:23,880 --> 00:04:32,600
+Step 3 is this step, we press in this cell and then press Run.
+
+37
+00:04:32,600 --> 00:04:39,880
+This step is called the step of creating a Virtual **Environment**.
+
+38
+00:04:39,880 --> 00:04:47,800
+He will create a folder named venv here. Oh, friends, you can also check if it happens.
+
+39
+00:04:47,800 --> 00:04:54,680
+If it can be created, if it doesn't, then I'll PM you later. You can tell me and I'll fix the code.
+
