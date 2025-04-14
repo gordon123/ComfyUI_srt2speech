@@ -17,7 +17,7 @@ class SRT2SpeechNode:
 
     RETURN_TYPES = ("STRING",)
     FUNCTION = "read_srt"
-    CATEGORY = "Custom"
+    CATEGORY = "📺 Subtitle Tools"
 
     def read_srt(self, folder_path, refresh_list="Refresh"):
         try:
