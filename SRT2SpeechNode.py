@@ -7,7 +7,7 @@ class SRT2SpeechNode:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "srt_file": ("STRING", {"default": ""}),
+                "srt_path": ("STRING", {"default": "subtitle.srt"}),
                 "output_dir": ("STRING", {"default": "output_audio"})
             }
         }
@@ -16,9 +16,9 @@ class SRT2SpeechNode:
     FUNCTION = "srt_to_speech"
     CATEGORY = "Audio"
 
-    def srt_to_speech(self, srt_file, output_dir):
+    def srt_to_speech(self, srt_path, output_dir):
         # อ่านไฟล์ .srt
-        with open(srt_file, "r", encoding="utf-8") as f:
+        with open(srt_path, "r", encoding="utf-8") as f:
             subs = list(srt.parse(f.read()))
 
         # สร้างโฟลเดอร์สำหรับไฟล์เสียง
