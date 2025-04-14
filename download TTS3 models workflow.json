@@ -1,0 +1,332 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "revision": 0,
+  "last_node_id": 16,
+  "last_link_id": 8,
+  "nodes": [
+    {
+      "id": 9,
+      "type": "MegaTTS3",
+      "pos": [
+        -432.67822265625,
+        -141
+      ],
+      "size": [
+        400,
+        208
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "generated_audio",
+          "type": "AUDIO",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "ComfyUI-MegaTTS",
+        "ver": "4544c6c7ae3a2817b1904a91c797df17bf565ffa",
+        "Node name for S&R": "MegaTTS3"
+      },
+      "widgets_values": [
+        "",
+        "en",
+        32,
+        1.4,
+        3,
+        "00003.wav"
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 13,
+      "type": "PreviewAudio",
+      "pos": [
+        4.32177734375,
+        123
+      ],
+      "size": [
+        315,
+        88
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 6
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.27",
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 10,
+      "type": "MegaTTS3S",
+      "pos": [
+        -432.67822265625,
+        123
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "generated_audio",
+          "type": "AUDIO",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "ComfyUI-MegaTTS",
+        "ver": "4544c6c7ae3a2817b1904a91c797df17bf565ffa",
+        "Node name for S&R": "MegaTTS3S"
+      },
+      "widgets_values": [
+        "",
+        "en",
+        "00003.wav"
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 12,
+      "type": "PreviewAudio",
+      "pos": [
+        4.32177734375,
+        -141
+      ],
+      "size": [
+        315,
+        88
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 5
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.27",
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 15,
+      "type": "MarkdownNote",
+      "pos": [
+        -928.1925048828125,
+        128.2677764892578
+      ],
+      "size": [
+        462,
+        163
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        " \n> The WaveVAE encoder is currently not available. \n>\n> For security reasons, Bytedance has not uploaded the WaveVAE encoder.\n>\n> You can only use pre-extracted latents (.npy files) for inference. \n>\n> To synthesize speech for a specific speaker, ensure both the corresponding WAV and NPY files are in the same directory.\n>\n> Refer to the [Bytedance MegaTTS3 repository](https://github.com/bytedance/MegaTTS3) for details on obtaining necessary files or submitting your voice samples."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 14,
+      "type": "LoadAudio",
+      "pos": [
+        -749.995361328125,
+        -398.9334716796875
+      ],
+      "size": [
+        315,
+        136
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.27",
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "bbc_news.wav",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 11,
+      "type": "MegaTTS_VoiceMaker",
+      "pos": [
+        -404.6895751953125,
+        -403.7474670410156
+      ],
+      "size": [
+        315,
+        204
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_in",
+          "type": "AUDIO",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio_out",
+          "type": "AUDIO",
+          "links": [
+            8
+          ]
+        },
+        {
+          "name": "voice_path",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "ComfyUI-MegaTTS",
+        "ver": "4544c6c7ae3a2817b1904a91c797df17bf565ffa",
+        "Node name for S&R": "MegaTTS_VoiceMaker"
+      },
+      "widgets_values": [
+        "my_voice",
+        "",
+        true,
+        true,
+        10
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 16,
+      "type": "PreviewAudio",
+      "pos": [
+        -42.31502151489258,
+        -402.537109375
+      ],
+      "size": [
+        315,
+        88
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 8
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.28",
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [
+        ""
+      ]
+    }
+  ],
+  "links": [
+    [
+      5,
+      9,
+      0,
+      12,
+      0,
+      "AUDIO"
+    ],
+    [
+      6,
+      10,
+      0,
+      13,
+      0,
+      "AUDIO"
+    ],
+    [
+      7,
+      14,
+      0,
+      11,
+      0,
+      "AUDIO"
+    ],
+    [
+      8,
+      11,
+      0,
+      16,
+      0,
+      "AUDIO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6830134553650713,
+      "offset": [
+        1295.7757064297248,
+        499.2273594116277
+      ]
+    }
+  },
+  "version": 0.4
+}
