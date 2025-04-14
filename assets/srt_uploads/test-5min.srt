@@ -1,0 +1,200 @@
+1
+00:00:01,300 --> 00:00:05,179
+[welcome to Comfyui Tutorials by iimate24]
+
+2
+00:00:17,600 --> 00:00:24,599
+Today, I will try to install ComfyUI manually. You can use it without using a script.
+
+3
+00:00:24,599 --> 00:00:29,840
+What do you type? We use Runpod, and today we are using Runpod Command Line at
+
+4
+00:00:29,840 --> 00:00:35,360
+Terminal, which we are now in this workspace directory is the workspace.
+
+5
+00:00:35,360 --> 00:00:40,640
+So the first thing we're going to do is copy the comfyui Github directory.
+
+6
+00:00:40,640 --> 00:00:46,559
+I think my friends probably have this link. The way to do it is to come here and press this button: copy to clipboard.
+
+7
+00:00:46,559 --> 00:00:53,359
+Then we come back to our terminal page in runpod. How to install Runpod, etc.
+
+8
+00:00:53,359 --> 00:00:58,239
+I think most of my friends can do it already, but if it's a new friend, try going back and looking at
+
+9
+00:00:58,239 --> 00:01:03,239
+This is the first episode of the series so the download method is easy, we will use the word
+
+10
+00:01:03,239 --> 00:01:09,479
+Say Git clone and then Ctrl + V the link that we copied and Enter on the left hand side here.
+
+11
+00:01:09,479 --> 00:01:14,840
+A ComfyUI folder pops up indicating that we have successfully downloaded it, but
+
+12
+00:01:14,840 --> 00:01:20,640
+If it is still downloading, please wait here for it to finish. After a while, the download speed will be around the same.
+
+13
+00:01:20,640 --> 00:01:25,680
+Download speed of this is around 900 MB per second on the server I use.
+
+14
+00:01:25,680 --> 00:01:33,000
+Now, I am using RTX5080 with 83 GB RAM, but the graphics card RAM is 16 GB. The download is complete.
+
+15
+00:01:33,000 --> 00:01:38,840
+And it will look something like this. Next, we will create a Virtual Environment.
+
+16
+00:01:38,840 --> 00:01:43,240
+Use the command python -m venv myvenv
+
+17
+00:01:43,240 --> 00:01:49,320
+Then followed by the name of the virtual environment.
+
+18
+00:01:49,320 --> 00:01:57,680
+What we want to set, let's say we want to set today as myvenv.
+
+19
+00:01:57,680 --> 00:02:01,479
+Then press Enter and this folder will be created.
+
+20
+00:02:01,479 --> 00:02:05,320
+folder virtual environment which we can name it as anything we want
+
+21
+00:02:05,320 --> 00:02:13,360
+We want but when we call we will call us by using command to activate source my
+
+22
+00:02:13,360 --> 00:02:18,959
+venv bin and then activate we will use this command
+
+23
+00:02:18,959 --> 00:02:24,200
+That is, we will have a folder called activate inside this folder if we double-click on it.
+
+24
+00:02:24,200 --> 00:02:28,450
+Click myvenv in bin
+
+25
+00:02:28,450 --> 00:02:32,519
+And then in here, there will be a file called
+
+26
+00:02:32,519 --> 00:02:39,680
+activate We will call this file. Press activate. We will have comfyUI.
+
+27
+00:02:39,680 --> 00:02:44,080
+We have the environment, then we have to install it.
+
+28
+00:02:44,080 --> 00:02:50,360
+install ComfyUI using this command, scroll down the mouse, we will select here because we use
+
+29
+00:02:50,360 --> 00:02:57,480
+Nvidia GPU cards now have 2 commands, the first command of the person using the normal version
+
+30
+00:02:57,480 --> 00:03:03,720
+In general, you can just copy this. But for me, I will install the Nightly version and it is for
+
+31
+00:03:03,720 --> 00:03:08,640
+For 50xx graphics cards, we will copy this directly and paste it into the command line.
+
+32
+00:03:08,640 --> 00:03:14,239
+After installing, when it installs, it will work like this in the background. It will load.
+
+33
+00:03:14,239 --> 00:03:20,360
+Many files are coming down, and this step should take about 20 minutes.
+
+34
+00:03:20,360 --> 00:03:28,200
+Okay, the installation is complete. If it comes up like this, it means it's done.
+
+35
+00:03:28,200 --> 00:03:33,239
+Once done we can continue working. You will notice that it downloads the package.
+
+36
+00:03:33,239 --> 00:03:38,360
+Various things to use in comfyUI, namely a list of everything it has.
+
+37
+00:03:38,360 --> 00:03:42,560
+install See? But we haven't finished installing it yet. We still have to install the requirements.
+
+38
+00:03:42,560 --> 00:03:48,879
+ComfyUI's too, and the way to use it is 1. We have to go into the ComfyUI Folder.
+
+39
+00:03:48,879 --> 00:03:55,560
+What you do is type the word CD and then type C because Python, um, Linux is like that.
+
+40
+00:03:55,560 --> 00:03:58,920
+Like case sensitive, it means big and small.
+
+41
+00:03:58,920 --> 00:04:04,159
+Type in lowercase c, we will not see it. Type in C and press tab once, we will see it automatically.
+
+42
+00:04:04,159 --> 00:04:09,680
+complete stay here Enter this is the command now we are in the folder of
+
+43
+00:04:09,680 --> 00:04:20,359
+comfyUI How to see the details inside, press ls -la and then we press Enter, which we
+
+44
+00:04:20,359 --> 00:04:25,880
+I want to see what files it has, which we need is requirement.txt.
+
+45
+00:04:25,880 --> 00:04:30,479
+Inside here, in this file, we can actually see it in requirements. We double-click.
+
+46
+00:04:30,479 --> 00:04:35,160
+From here, you can see the details inside. See? These are the packages that we need to install.
+
+47
+00:04:35,160 --> 00:04:41,280
+But when we install, we don't have to install them one by one. We don't have to type install one by one.
+
+48
+00:04:41,280 --> 00:04:45,960
+Use the command pip install -r requirement.txt
+
+49
+00:04:45,960 --> 00:04:52,080
+install and then there is a delete r which is delete r which is it will automatically install every package that it puts in.
+
+50
+00:04:52,080 --> 00:04:57,520
+When you come here, we call the file name. Requirements are the same as before. Press the small r.
+
