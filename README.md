@@ -27,7 +27,26 @@ support only Eng, Chinese  <br>
 
 wait a few days you will get your file with .npy here "user_batch_1" https://drive.google.com/drive/folders/1QhcHWcy20JfqWjgqZX1YM3I6i9u4oNlr <br>
 
+```
+source myvenv/bin/activate
+```
+download all .wav and .npy
+```
+python3 -c "
+import os, requests
+out = '/workspace/ComfyUI/custom_nodes/ComfyUI-MegaTTS/voices'
+os.makedirs(out, exist_ok=True)
+api_url = 'https://api.github.com/repos/gordon123/ComfyUI_srt2speech/contents/assets/wav-npy'
+r = requests.get(api_url)
+for f in r.json():
+    if f['name'].endswith(('.wav', '.npy')):
+        print('Downloading', f['name'])
+        data = requests.get(f['download_url']).content
+        with open(os.path.join(out, f['name']), 'wb') as out_file:
+            out_file.write(data)
+"
 
+```
 
 
 
