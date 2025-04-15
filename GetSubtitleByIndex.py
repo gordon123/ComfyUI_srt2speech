@@ -1,4 +1,6 @@
 import os
+import re
+import inflect
 
 class GetSubtitleByIndex:
     @classmethod
@@ -50,5 +52,12 @@ class GetSubtitleByIndex:
 
         text = subs[index]
         timestamp = times[index] if index < len(times) else ""
+
+        # แปลงตัวเลขในข้อความเป็นข้อความภาษาอังกฤษ
+        engine = inflect.engine()
+        def replace_numbers(t):
+            return re.sub(r'\d+(\.\d+)?', lambda x: engine.number_to_words(x.group()), t)
+
+        text = replace_numbers(text)
 
         return (text, timestamp, "\n".join(subs), "\n".join(times), srt_file)
