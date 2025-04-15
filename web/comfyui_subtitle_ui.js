@@ -65,3 +65,9 @@ app.ui.registerCustomNodeUI("GetSubtitleByIndex", async (node, app) => {
     });
   });
   
+  // ✅ node class
+NODE_CLASS_BUTTONS = NODE_CLASS_BUTTONS || {};
+NODE_CLASS_BUTTONS["GetSubtitleByIndex"] = {
+  all_subtitles: { name: "📋 All Subtitles", type: "output" },
+  all_timestamps: { name: "⏱️ All Timestamps", type: "output" }
+};
