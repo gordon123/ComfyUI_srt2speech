@@ -15,6 +15,7 @@ NODE_CLASS_MAPPINGS = {
     "GetSubtitleByIndex": GetSubtitleByIndex,
 }
 
+
 NODE_DISPLAY_NAME_MAPPINGS = {
     "SRT2SpeechNode": "SRT to Speech",
     "SplitSRTSentencesNode": "Split SRT Sentence (1st)",
@@ -23,3 +24,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "SaveWAVNode": "Save WAV from TTS",
     "GetSubtitleByIndex": "Get Subtitle By Index",
 }
+
+
+WEB_DIRECTORY = "./web"
