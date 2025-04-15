@@ -1,6 +1,7 @@
 import os
 import re
 import torchaudio
+import torch
 
 class SaveWAVNode:
     @classmethod
@@ -24,6 +25,11 @@ class SaveWAVNode:
 
         waveform = audio["waveform"]
         sample_rate = audio["sample_rate"]
+
+        if waveform.ndim == 1:
+            waveform = waveform.unsqueeze(0)
+        elif waveform.ndim > 2:
+            waveform = waveform.squeeze()
 
         def clean(t):
             return re.sub(r"[^\d_]", "", t.replace(",", ".").replace(":", "_"))
