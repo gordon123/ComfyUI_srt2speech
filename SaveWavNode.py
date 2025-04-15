@@ -17,7 +17,7 @@ class SaveWAVNode:
     RETURN_TYPES = ("STRING", "AUDIO",)
     RETURN_NAMES = ("saved_path", "audio",)
     FUNCTION = "save_wav"
-    CATEGORY = "\ud83d\udcfa Subtitle Tools"
+    CATEGORY = "Subtitle Tools"
 
     def save_wav(self, audio, timestamp, srt_file):
         folder = "./custom_nodes/ComfyUI_srt2speech/assets/audio_out"
@@ -26,18 +26,14 @@ class SaveWAVNode:
         waveform = audio["waveform"]
         sample_rate = audio["sample_rate"]
 
-        print(f"Saving WAV: shape before={waveform.shape}, sample_rate={sample_rate}")
-
-        # Ensure waveform is 2D: [channels, samples]
-        while waveform.ndim > 2:
+        # 🔁 Ensure waveform is 2D: [channels, samples]
+        if waveform.ndim == 3:
             waveform = waveform.squeeze(0)
-        if waveform.ndim == 1:
+        elif waveform.ndim == 1:
             waveform = waveform.unsqueeze(0)
 
-        print(f"Saving WAV: shape after={waveform.shape}")
-
-        def clean(t):
-            return re.sub(r"[^\d_]", "", t.replace(",", ".").replace(":", "_"))
+        # 🧼 Clean timestamp and filename
+        def clean(t): return re.sub(r"[^\d_]", "", t.replace(",", ".").replace(":", "_"))
 
         start, end = "start", "end"
         match = re.match(r"(.+?) --> (.+)", timestamp)
@@ -49,5 +45,7 @@ class SaveWAVNode:
         filename = f"{start}_to_{end}__{base_name}.wav"
         filepath = os.path.join(folder, filename)
 
+        print(f"Saving WAV: shape={waveform.shape}, sample_rate={sample_rate}, name={filename}")
         torchaudio.save(filepath, waveform, sample_rate)
+
         return (filepath, audio)
