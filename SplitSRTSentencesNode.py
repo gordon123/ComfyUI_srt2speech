@@ -1,6 +1,6 @@
 import re
 
-class SplitAllSubtitlesNode:
+class SplitSRTSentencesNode:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -10,11 +10,11 @@ class SplitAllSubtitlesNode:
         }
 
     RETURN_TYPES = ("STRING", "STRING")
-    RETURN_NAMES = ("subtitle_texts", "subtitle_times")
-    FUNCTION = "split_all"
+    RETURN_NAMES = ("text", "timestamp")
+    FUNCTION = "split_srt"
     CATEGORY = "Subtitle Tools"
 
-    def split_all(self, srt_text):
+    def split_srt(self, srt_text):
         pattern = """(\d+)\n(\d{2}:\d{2}:\d{2},\d{3})\s-->\s(\d{2}:\d{2}:\d{2},\d{3})\n(.*?)\n(?=\d+\n|\Z)"""
         matches = re.findall(pattern, srt_text, re.DOTALL)
 
@@ -28,7 +28,7 @@ class SplitAllSubtitlesNode:
                 results.append(clean_text)
                 times.append(f"{start} --> {end}")
 
-        joined_texts = "\n".join(results)
-        joined_times = "\n".join(times)
-
-        return (joined_texts, joined_times)
+        if results:
+            return (results[0], times[0])
+        else:
+            return ("", "")
