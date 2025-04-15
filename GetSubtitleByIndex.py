@@ -45,10 +45,10 @@ class GetSubtitleByIndex:
         if buffer:
             subs.append(" ".join(buffer))
 
-        text = ""
-        timestamp = ""
-        if 0 <= index < len(subs):
-            text = subs[index]
-            timestamp = times[index] if index < len(times) else ""
+        if index < 0 or index >= len(subs):
+            return ("", "", "No more subtitles!", "Subtitle index out of range", srt_file)
+
+        text = subs[index]
+        timestamp = times[index] if index < len(times) else ""
 
         return (text, timestamp, "\n".join(subs), "\n".join(times), srt_file)
