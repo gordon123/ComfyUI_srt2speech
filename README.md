@@ -1,5 +1,5 @@
 # ComfyUI_srt2speech
-This repo is my first Custom node with very basic coding, ComfyUI_srt2speech​ <br> 
+This repo is my first Custom node with my very basic knowledge of coding, ComfyUI_srt2speech​ <br> 
 I tested this TTS3 on the Runpod, with ComfyUI native installing. <br> 
 (portable version, please use embbeded python!  <br> 
 
