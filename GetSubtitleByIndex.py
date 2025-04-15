@@ -32,7 +32,10 @@ class GetSubtitleByIndex:
             with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
         except Exception as e:
-            return (f"Error reading file: {e}", "", "", "")
+            return {
+                "ui": {"error": f"Error reading file: {e}"},
+                "result": (f"Error reading file: {e}", "", "", "")
+            }
 
         blocks = content.strip().split("\n\n")
         subtitles = []
@@ -56,4 +59,12 @@ class GetSubtitleByIndex:
         all_subtitles = "\n".join(subtitles)
         all_timestamps = "\n".join(timestamps)
 
-        return (selected_text, selected_time, all_subtitles, all_timestamps)
+        return {
+            "ui": {
+                "Selected Subtitle": selected_text,
+                "Selected Timestamp": selected_time,
+                "All Subtitles": all_subtitles,
+                "All Timestamps": all_timestamps
+            },
+            "result": (selected_text, selected_time, all_subtitles, all_timestamps)
+        }
