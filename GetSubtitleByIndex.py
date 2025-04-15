@@ -1,52 +1,63 @@
 import os
 import re
-import torchaudio
-import torch
+import inflect
 
-class SaveWAVNode:
+class GetSubtitleByIndex:
     @classmethod
     def INPUT_TYPES(cls):
+        default_folder = "/workspace/ComfyUI/custom_nodes/ComfyUI_srt2speech/assets/srt_uploads"
+        os.makedirs(default_folder, exist_ok=True)
+
+        srt_files = [f for f in os.listdir(default_folder) if f.lower().endswith(".srt")]
+        if not srt_files:
+            srt_files = ["(no .srt files found)"]
+
         return {
             "required": {
-                "audio": ("AUDIO",),
-                "timestamp": ("STRING", {"multiline": False}),
-                "srt_file": ("STRING", {"multiline": False, "default": ""})
+                "srt_file": (srt_files,),
+                "index": ("INT", {"default": 0, "min": 0, "step": 1})
             }
         }
 
-    RETURN_TYPES = ("STRING", "AUDIO",)
-    RETURN_NAMES = ("saved_path", "audio",)
-    FUNCTION = "save_wav"
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("subtitle_text", "timestamp", "all_subtitles", "all_timestamps", "srt_file")
+    FUNCTION = "get_subtitle"
     CATEGORY = "\ud83d\udcfa Subtitle Tools"
 
-    def format_timestamp(self, t):
-        t = t.replace(",", ".")
-        h, m, s = t.split(":")
-        s, ms = s.split(".")
-        return f"{int(h):02}_{int(m):02}_{int(s)}s{int(ms)}ms"
+    def get_subtitle(self, srt_file, index):
+        folder_path = "/workspace/ComfyUI/custom_nodes/ComfyUI_srt2speech/assets/srt_uploads"
+        file_path = os.path.join(folder_path, srt_file)
+        with open(file_path, "r", encoding="utf-8") as f:
+            lines = f.read().strip().split("\n")
 
-    def save_wav(self, audio, timestamp, srt_file):
-        folder = "./custom_nodes/ComfyUI_srt2speech/assets/audio_out"
-        os.makedirs(folder, exist_ok=True)
+        subs = []
+        times = []
+        buffer = []
+        for line in lines:
+            if "-->" in line:
+                times.append(line)
+            elif line.strip().isdigit():
+                continue
+            elif line.strip() == "":
+                if buffer:
+                    subs.append(" ".join(buffer))
+                    buffer = []
+            else:
+                buffer.append(line.strip())
+        if buffer:
+            subs.append(" ".join(buffer))
 
-        waveform = audio["waveform"]
-        sample_rate = audio["sample_rate"]
+        if index < 0 or index >= len(subs):
+            return ("", "", "No more subtitles!", "Subtitle index out of range", srt_file)
 
-        if waveform.ndim == 1:
-            waveform = waveform.unsqueeze(0)
-        elif waveform.ndim > 2:
-            waveform = waveform.squeeze()
+        text = subs[index]
+        timestamp = times[index] if index < len(times) else ""
 
-        start, end = "start", "end"
-        match = re.match(r"(.+?) --> (.+)", timestamp)
-        if match:
-            start = self.format_timestamp(match.group(1))
-            end = self.format_timestamp(match.group(2))
+        # แปลงตัวเลขในข้อความเป็นข้อความภาษาอังกฤษ
+        engine = inflect.engine()
+        def replace_numbers(t):
+            return re.sub(r'\d+(\.\d+)?', lambda x: engine.number_to_words(x.group()), t)
 
-        base_name = os.path.splitext(os.path.basename(srt_file))[0] if srt_file else "nosrt"
-        filename = f"{start}_to_{end}__{base_name}.wav"
-        filepath = os.path.join(folder, filename)
+        text = replace_numbers(text)
 
-        print(f"Saving WAV: shape={waveform.shape}, sample_rate={sample_rate}, name={filename}")
-        torchaudio.save(filepath, waveform, sample_rate)
-        return (filepath, audio)
+        return (text, timestamp, "\n".join(subs), "\n".join(times), srt_file)
