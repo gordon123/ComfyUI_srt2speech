@@ -1,7 +1,6 @@
 import os
-import torch
-import soundfile as sf
 import re
+import torchaudio
 
 class SaveWAVNode:
     @classmethod
@@ -9,31 +8,35 @@ class SaveWAVNode:
         return {
             "required": {
                 "audio": ("AUDIO",),
-                "timestamp": ("STRING",),
-                "srt_file": ("STRING", {"multiline": False, "default": "test.srt"})
+                "timestamp": ("STRING", {"multiline": False}),
+                "srt_file": ("STRING", {"multiline": False, "default": ""})
             }
         }
 
-    RETURN_TYPES = ("STRING", "AUDIO")
-    RETURN_NAMES = ("saved_path", "audio")
-    FUNCTION = "save"
+    RETURN_TYPES = ("STRING", "AUDIO",)
+    RETURN_NAMES = ("saved_path", "audio",)
+    FUNCTION = "save_wav"
     CATEGORY = "📺 Subtitle Tools"
 
-    def save(self, audio, timestamp, srt_file):
+    def save_wav(self, audio, timestamp, srt_file):
         folder = "./custom_nodes/ComfyUI_srt2speech/assets/audio_out"
         os.makedirs(folder, exist_ok=True)
-
-        def sanitize_filename(name):
-            return re.sub(r"[^\w\-_.]", "_", name)
-
-        safe_timestamp = sanitize_filename(timestamp.replace("-->", "to").replace(",", "_").replace(":", "_"))
-        safe_srt = sanitize_filename(srt_file.replace(".srt", ""))
-        filename = f"{safe_timestamp}__{safe_srt}.wav"
-        full_path = os.path.join(folder, filename)
 
         waveform = audio["waveform"]
         sample_rate = audio["sample_rate"]
 
-        sf.write(full_path, waveform.squeeze().cpu().numpy(), samplerate=sample_rate)
+        def clean(t):
+            return re.sub(r"[^\d_]", "", t.replace(",", ".").replace(":", "_"))
 
-        return (full_path, audio)
+        start, end = "start", "end"
+        match = re.match(r"(.+?) --> (.+)", timestamp)
+        if match:
+            start = clean(match.group(1))
+            end = clean(match.group(2))
+
+        base_name = os.path.splitext(os.path.basename(srt_file))[0] if srt_file else "nosrt"
+        filename = f"{start}_to_{end}__{base_name}.wav"
+        filepath = os.path.join(folder, filename)
+
+        torchaudio.save(filepath, waveform, sample_rate)
+        return (filepath, audio)
