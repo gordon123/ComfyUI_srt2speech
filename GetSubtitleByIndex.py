@@ -13,58 +13,44 @@ class GetSubtitleByIndex:
         return {
             "required": {
                 "srt_file": (srt_files,),
-                "index": ("INT", {"default": 0, "min": 0, "step": 1})
-            }
-        }
-
-    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING")
-    RETURN_NAMES = ("text", "timestamp", "all_subtitles", "all_timestamps")
-    FUNCTION = "get_subtitle"
-    CATEGORY = "Subtitle Tools"
-
-    OUTPUT_NODE = True
-
-    def get_subtitle(self, srt_file, index):
-        folder_path = "/workspace/ComfyUI/custom_nodes/ComfyUI_srt2speech/assets/srt_uploads"
-        file_path = os.path.join(folder_path, srt_file)
-
-        try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                content = f.read()
-        except Exception as e:
-            return {
-                "ui": {"error": f"Error reading file: {e}"},
-                "result": (f"Error reading file: {e}", "", "", "")
-            }
-
-        blocks = content.strip().split("\n\n")
-        subtitles = []
-        timestamps = []
-
-        for block in blocks:
-            lines = block.strip().split("\n")
-            if len(lines) >= 3:
-                time = lines[1]
-                text = " ".join(lines[2:])
-                timestamps.append(time)
-                subtitles.append(text)
-
-        selected_text = ""
-        selected_time = ""
-
-        if 0 <= index < len(subtitles):
-            selected_text = subtitles[index]
-            selected_time = timestamps[index]
-
-        all_subtitles = "\n".join(subtitles)
-        all_timestamps = "\n".join(timestamps)
-
-        return {
-            "ui": {
-                "Selected Subtitle": selected_text,
-                "Selected Timestamp": selected_time,
-                "All Subtitles": all_subtitles,
-                "All Timestamps": all_timestamps
+                "index": ("INT", {"default": 0, "min": 0, "step": 1}),
             },
-            "result": (selected_text, selected_time, all_subtitles, all_timestamps)
+            "hidden": {
+                "folder_path": default_folder
+            }
         }
+
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("subtitle_text", "timestamp", "all_subtitles", "all_timestamps", "srt_file")
+    FUNCTION = "get_subtitle"
+    CATEGORY = "\ud83d\udcfa Subtitle Tools"
+
+    def get_subtitle(self, srt_file, index, folder_path):
+        file_path = os.path.join(folder_path, srt_file)
+        with open(file_path, "r", encoding="utf-8") as f:
+            lines = f.read().strip().split("\n")
+
+        subs = []
+        times = []
+        buffer = []
+        for line in lines:
+            if "-->" in line:
+                times.append(line)
+            elif line.strip().isdigit():
+                continue
+            elif line.strip() == "":
+                if buffer:
+                    subs.append(" ".join(buffer))
+                    buffer = []
+            else:
+                buffer.append(line.strip())
+        if buffer:
+            subs.append(" ".join(buffer))
+
+        text = ""
+        timestamp = ""
+        if 0 <= index < len(subs):
+            text = subs[index]
+            timestamp = times[index] if index < len(times) else ""
+
+        return (text, timestamp, "\n".join(subs), "\n".join(times), srt_file)
