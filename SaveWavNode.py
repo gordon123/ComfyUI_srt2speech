@@ -12,8 +12,8 @@ class SaveWAVNode:
             }
         }
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("saved_path",)
+    RETURN_TYPES = ("STRING", "AUDIO")
+    RETURN_NAMES = ("saved_path", "audio")
     FUNCTION = "save_wav"
     CATEGORY = "Subtitle Tools"
 
@@ -29,6 +29,6 @@ class SaveWAVNode:
             waveform = audio["waveform"].squeeze().cpu().numpy()
             sample_rate = audio["sample_rate"]
             sf.write(save_path, waveform, sample_rate)
-            return (save_path,)
+            return (save_path, audio)
         except Exception as e:
-            return (f"Error saving WAV: {e}",)
+            return (f"Error saving WAV: {e}", audio)
