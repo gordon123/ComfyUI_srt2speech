@@ -41,12 +41,19 @@ apt update && apt install -y ffmpeg
 4. Wait a few days,  Developer will give you a file with trained to your voice *.npy and *.wav here ["user_batch_1"](https://drive.google.com/drive/folders/1QhcHWcy20JfqWjgqZX1YM3I6i9u4oNlr) <br>
 
 ---
+**To install my repo**
+1. use git clone
+2. pip instal the requirements.txt
+
+---
 **To download files in my assest to the Runpod workspace, activate venv.**  <br>
 
 ```
 source myvenv/bin/activate
 ```
-download all .wav and .npy, copy and paste the code below into ther Runpod terminal
+download all .wav and .npy, copy and paste the code below into the Runpod terminal <br>
+
+MegaTTS node require, .wav file or .nyp file put in their custom node | ComfyUI/custom_nodes/ComfyUI-MegaTTS/voices folder <br>
 
 ```
 python3 -c "
