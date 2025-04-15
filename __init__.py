@@ -3,6 +3,8 @@ from .SplitSRTSentencesNode import SplitSRTSentencesNode
 from .SplitAllSubtitlesNode import SplitAllSubtitlesNode
 from .SubtitleIteratorNode import SubtitleIteratorNode
 from .SaveWavNode import SaveWAVNode
+from .GetSubtitleByIndex import GetSubtitleByIndex
+
 
 NODE_CLASS_MAPPINGS = {
     "SRT2SpeechNode": SRT2SpeechNode,
@@ -10,6 +12,7 @@ NODE_CLASS_MAPPINGS = {
     "SplitAllSubtitlesNode": SplitAllSubtitlesNode,
     "SubtitleIteratorNode": SubtitleIteratorNode,
     "SaveWAVNode": SaveWAVNode,
+    "GetSubtitleByIndex": GetSubtitleByIndex,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -18,4 +21,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "SplitAllSubtitlesNode": "Split All Subtitles",
     "SubtitleIteratorNode": "Subtitle Iterator",
     "SaveWAVNode": "Save WAV from TTS",
+    "GetSubtitleByIndex": "Get Subtitle By Index",
 }
