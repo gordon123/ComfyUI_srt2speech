@@ -22,6 +22,8 @@ class GetSubtitleByIndex:
     FUNCTION = "get_subtitle"
     CATEGORY = "Subtitle Tools"
 
+    OUTPUT_NODE = True
+
     def get_subtitle(self, srt_file, index):
         folder_path = "/workspace/ComfyUI/custom_nodes/ComfyUI_srt2speech/assets/srt_uploads"
         file_path = os.path.join(folder_path, srt_file)
@@ -44,7 +46,13 @@ class GetSubtitleByIndex:
                 timestamps.append(time)
                 subtitles.append(text)
 
+        selected_text = ""
+        selected_time = ""
+
         if 0 <= index < len(subtitles):
-            return (subtitles[index], timestamps[index])
-        else:
-            return ("", "")
+            selected_text = subtitles[index]
+            selected_time = timestamps[index]
+
+        print(f"\n=== Subtitle {index} ===\nText: {selected_text}\nTime: {selected_time}\n")
+
+        return (selected_text, selected_time)
