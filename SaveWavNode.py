@@ -7,8 +7,7 @@ class SaveWAVNode:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "waveform": ("TENSOR",),
-                "sample_rate": ("INT",),
+                "audio": ("AUDIO",),
                 "timestamp": ("STRING", {"multiline": False})
             }
         }
@@ -18,7 +17,7 @@ class SaveWAVNode:
     FUNCTION = "save_wav"
     CATEGORY = "Subtitle Tools"
 
-    def save_wav(self, waveform, sample_rate, timestamp):
+    def save_wav(self, audio, timestamp):
         output_dir = "/workspace/ComfyUI/custom_nodes/ComfyUI_srt2speech/assets/audio_out"
         os.makedirs(output_dir, exist_ok=True)
 
@@ -27,8 +26,9 @@ class SaveWAVNode:
         save_path = os.path.join(output_dir, filename)
 
         try:
-            waveform_np = waveform.squeeze().cpu().numpy()
-            sf.write(save_path, waveform_np, sample_rate)
+            waveform = audio["waveform"].squeeze().cpu().numpy()
+            sample_rate = audio["sample_rate"]
+            sf.write(save_path, waveform, sample_rate)
             return (save_path,)
         except Exception as e:
             return (f"Error saving WAV: {e}",)
