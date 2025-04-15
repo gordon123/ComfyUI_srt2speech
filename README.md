@@ -1,7 +1,10 @@
 # ComfyUI_srt2speech
 This repo is my first Custom node with my very basic knowledge of coding, ComfyUI_srt2speech​ <br> 
-I tested this TTS3 on the Runpod, with ComfyUI native installing. <br> 
-(portable version, please use embbeded python!  <br> 
+I tested this TTS3 on the Runpod, with ComfyUI native installing. <br>  
+I make this custom node to read srt subtitle file and send it to MegaTTS node to generate dub Eng, or Chinese for now.​ <br> 
+It should work with other TTS or similar for ComfyUI, in the end I wil combine with Wan2.1 or any other Lipsync. ​ <br> 
+My aim try to do !1CLICK make all the job.​ <br> 
+(portable version, please use embbeded python!)  <br> 
 
 This instruction for myself is using [Runpod.com Gpu cloud service](https://runpod.io?ref=c0v5p0ys), if you use your own local computer, please check your file path. <br>
 
