@@ -1,36 +1,50 @@
 # ComfyUI_srt2speech
-ComfyUI_srt2speech​
+This repo is my first Custom node with very basic coding, ComfyUI_srt2speech​ <br> 
+I tested this TTS3 on the Runpod, with ComfyUI native installing. <br> 
+(portable version, please use embbeded python!  <br> 
 
+This instruction for myself is using [Runpod.com Gpu cloud service](https://runpod.io?ref=c0v5p0ys), if you use your own local computer, please check your file path. <br>
 
 ## For my personal TESTING repo!
-Install this custom node in custom manager ComfyUI-MegaTTS <br>
 
-ไปใน custom node, pip install -r requirements.ext <br>
-apt update && apt install -y ffmpeg <br>
+1. Install ComfyUI-MegaTTS custom node via custom manager [ComfyUI-MegaTTS](https://github.com/1038lab/ComfyUI-MegaTTS) <br>
+2. Go to custom node,
+   
+```
+pip install -r requirements.ext
+```
+   
+3. Install ffmpeg, ffmprobe
+   
+```   
+apt update && apt install -y ffmpeg
+```
 
-restart comfy <br>
-create 10s *.wav file with mono! 16-24 kHz <br>
+4. restart ComfyUI <br>
+5. create your own 10s *.wav file with mono! 16-24 kHz, or take any .wav file in this repo folder <br>
+6. use Voice maker to download all the model first time ! <br>
+7. it will create new folder in /workspace/ComfyUI/models/TTS and all models from [MegaTTS3](https://huggingface.co/ByteDance/MegaTTS3) <br>
+8. copy .wav and .npy from assets example files into  /workspace/ComfyUI/custom_nodes/ComfyUI-MegaTTS/voices <br>
+9. now it ready to do Text2speech <br>
 
-use Voice maker to download all the model first time ! <br>
+--- 
+**===== to create your own voice model ===** <br>
 
-it will create new folder in /workspace/ComfyUI/models/TTS <br>
+1. I use Audacity to record myself about 10-15sec, reading some English clearly avoid noise <br>
+2. Export it as a "*.wav" (Make file name for your to remember easily) with Mono, 16 - 24 kHz and upload here ["wav_queue" folder of Google drive](https://drive.google.com/drive/folders/1gCWL1y_2xu9nIFhUX_OW5MbcFuB7J5Cl) <br>
+**PS support only English, Chinese  <br>
+** For security reason, they don't release encoder  <br> 
 
-copy .wav and .npy from assets example files into  /workspace/ComfyUI/custom_nodes/ComfyUI-MegaTTS/voices <br>
+4. Wait a few days,  Developer will give you a file with trained to your voice *.npy and *.wav here ["user_batch_1"](https://drive.google.com/drive/folders/1QhcHWcy20JfqWjgqZX1YM3I6i9u4oNlr) <br>
 
-now it ready to do Text2speech <br>
-
-===== to create your own voice model === <br>
-
-I use Audacity to record myself about 10-15sec <br>
-export "*.wav" (Make file name for your to remember easily) with mono, 16 - 24 kHz and upload here "wav_queue" folder of Google drive https://drive.google.com/drive/folders/1gCWL1y_2xu9nIFhUX_OW5MbcFuB7J5Cl <br>
-support only Eng, Chinese  <br> 
-
-wait a few days you will get your file with .npy here "user_batch_1" https://drive.google.com/drive/folders/1QhcHWcy20JfqWjgqZX1YM3I6i9u4oNlr <br>
+---
+**To download files in my assest to the Runpod workspace, activate venv.**  <br>
 
 ```
 source myvenv/bin/activate
 ```
-download all .wav and .npy
+download all .wav and .npy, copy and paste the code below into ther Runpod terminal
+
 ```
 python3 -c "
 import os, requests
