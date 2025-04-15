@@ -17,7 +17,7 @@ class SaveWAVNode:
     RETURN_TYPES = ("STRING", "AUDIO",)
     RETURN_NAMES = ("saved_path", "audio",)
     FUNCTION = "save_wav"
-    CATEGORY = "\ud83d\udcfa Subtitle Tools"
+    CATEGORY = "📺 Subtitle Tools"
 
     def format_timestamp(self, t):
         t = t.replace(",", ".")
@@ -32,10 +32,16 @@ class SaveWAVNode:
         waveform = audio["waveform"]
         sample_rate = audio["sample_rate"]
 
+        # ✅ Fix waveform shape and backend
         if waveform.ndim == 1:
-            waveform = waveform.unsqueeze(0)
-        elif waveform.ndim > 2:
-            waveform = waveform.squeeze()
+            waveform = waveform.unsqueeze(0)  # [samples] → [1, samples]
+        elif waveform.ndim == 3:
+            waveform = waveform.squeeze(0)    # [1, channels, samples] → [channels, samples]
+        elif waveform.ndim != 2:
+            raise ValueError(f"Unexpected waveform shape: {waveform.shape}")
+
+        # ✅ Use sox_io to avoid FFmpeg-related issues
+        torchaudio.set_audio_backend("sox_io")
 
         start, end = "start", "end"
         match = re.match(r"(.+?) --> (.+)", timestamp)
@@ -49,4 +55,5 @@ class SaveWAVNode:
 
         print(f"Saving WAV: shape={waveform.shape}, sample_rate={sample_rate}, name={filename}")
         torchaudio.save(filepath, waveform, sample_rate)
+
         return (filepath, audio)
