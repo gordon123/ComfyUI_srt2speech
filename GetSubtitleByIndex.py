@@ -14,9 +14,6 @@ class GetSubtitleByIndex:
             "required": {
                 "srt_file": (srt_files,),
                 "index": ("INT", {"default": 0, "min": 0, "step": 1})
-            },
-            "hidden": {
-                "folder_path": default_folder
             }
         }
 
@@ -25,7 +22,8 @@ class GetSubtitleByIndex:
     FUNCTION = "get_subtitle"
     CATEGORY = "Subtitle Tools"
 
-    def get_subtitle(self, srt_file, index, folder_path):
+    def get_subtitle(self, srt_file, index):
+        folder_path = "/workspace/ComfyUI/custom_nodes/ComfyUI_srt2speech/assets/srt_uploads"
         file_path = os.path.join(folder_path, srt_file)
 
         try:
