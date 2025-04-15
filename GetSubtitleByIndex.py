@@ -17,8 +17,8 @@ class GetSubtitleByIndex:
             }
         }
 
-    RETURN_TYPES = ("STRING", "STRING")
-    RETURN_NAMES = ("text", "timestamp")
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("text", "timestamp", "all_subtitles", "all_timestamps")
     FUNCTION = "get_subtitle"
     CATEGORY = "Subtitle Tools"
 
@@ -32,7 +32,7 @@ class GetSubtitleByIndex:
             with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
         except Exception as e:
-            return (f"Error reading file: {e}", "")
+            return (f"Error reading file: {e}", "", "", "")
 
         blocks = content.strip().split("\n\n")
         subtitles = []
@@ -53,6 +53,7 @@ class GetSubtitleByIndex:
             selected_text = subtitles[index]
             selected_time = timestamps[index]
 
-        print(f"\n=== Subtitle {index} ===\nText: {selected_text}\nTime: {selected_time}\n")
+        all_subtitles = "\n".join(subtitles)
+        all_timestamps = "\n".join(timestamps)
 
-        return (selected_text, selected_time)
+        return (selected_text, selected_time, all_subtitles, all_timestamps)
