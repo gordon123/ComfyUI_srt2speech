@@ -87,8 +87,8 @@ class SaveWavNodePadding:
         filepath = os.path.join(folder, filename)
 
         try:
-            print(f"[INFO] Saving WAV: shape={waveform.shape}, sample_rate={sample_rate}, name={filename}")
             torchaudio.set_audio_backend("sox_io")
+            print(f"[INFO] Saving WAV: shape={waveform.shape}, sample_rate={sample_rate}, name={filename}")
             torchaudio.save(filepath, waveform, sample_rate)
         except Exception as e:
             print(f"[FALLBACK] Save failed: {e} → using dummy")
