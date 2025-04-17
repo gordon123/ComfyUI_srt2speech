@@ -56,9 +56,13 @@ class SaveWavNodePadding:
         folder = os.path.join(base_path, "assets", "audio_out")
         os.makedirs(folder, exist_ok=True)
 
-        waveform = audio["waveform"]
-        sample_rate = audio["sample_rate"]
+        waveform = audio.get("waveform")
+        sample_rate = audio.get("sample_rate")
 
+        if waveform is None or sample_rate is None:
+            raise ValueError("Audio data is missing waveform or sample_rate")
+
+        # Ensure waveform shape
         if waveform.ndim == 1:
             waveform = waveform.unsqueeze(0)
         elif waveform.ndim == 3:
