@@ -1,17 +1,17 @@
-from .SaveWavNode import SaveWAVNode
+from .SaveWavNode import SaveWavNode
 from .GetSubtitleByIndex import GetSubtitleByIndex
-from .SaveWavNodePadding import SaveWAVNodePadding
+from .SaveWavNodePadding import SaveWavNodePadding
 
 NODE_CLASS_MAPPINGS = {
-    "SaveWAVNode": SaveWAVNode,
+    "SaveWavNode": SaveWavNode,
     "GetSubtitleByIndex": GetSubtitleByIndex,
-    "SaveWAVNodePadding": SaveWAVNodePadding,
+    "SaveWavNodePadding": SaveWavNodePadding,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "SaveWAVNode": "Save WAV from TTS",
+    "SaveWavNode": "Save WAV from TTS",
     "GetSubtitleByIndex": "Get Subtitle By Index",
-    "SaveWAVNodePadding": "Save WAV with Padding",
+    "SaveWavNodePadding": "Save Wav with Padding",
 }
 
 WEB_DIRECTORY = "./web"
