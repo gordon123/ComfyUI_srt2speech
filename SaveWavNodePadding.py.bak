@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
-# This node will fill the quiet time with silence if TTS ends before the subtitle ends
+# -*- coding: utf-8 -*- sometimes the TTS3 generate quicker than the subtitle, this node will fill the quiet time with silence
+# -*- coding: utf-8 -*- 
+# This node will fill the quiet time with silence if TTS ends before the subtitle ends 
 
 import os
 import re
@@ -37,13 +38,12 @@ class SaveWavNodePadding:
         return int(h) * 3600 + int(m) * 60 + int(s) + int(ms) / 1000
 
     def pad_audio_to_duration(self, waveform, sample_rate, target_duration_sec):
-        # 🛡️ Ensure waveform is in [channels, samples] shape
         if waveform.ndim == 1:
-            waveform = waveform.unsqueeze(0)
+            waveform = waveform.unsqueeze(0)  # [samples] → [1, samples]
         elif waveform.ndim == 3:
-            waveform = waveform.squeeze(0)
+            waveform = waveform.squeeze(0)    # [1, channels, samples] → [channels, samples]
         elif waveform.ndim != 2:
-            raise ValueError(f"Invalid waveform shape: {waveform.shape}")
+            raise ValueError(f"Unexpected waveform shape for padding: {waveform.shape}")
 
         current_duration = waveform.shape[1] / sample_rate
         if current_duration < target_duration_sec:
@@ -51,7 +51,9 @@ class SaveWavNodePadding:
             return F.pad(waveform, (0, pad_samples))
         return waveform
 
+
     def save_wav(self, audio, timestamp, srt_file, pad_audio):
+        # 🔁 ใช้ relative path อิงจากตำแหน่งไฟล์นี้
         base_path = os.path.dirname(os.path.abspath(__file__))
         folder = os.path.join(base_path, "assets", "audio_out")
         os.makedirs(folder, exist_ok=True)
@@ -61,10 +63,8 @@ class SaveWavNodePadding:
 
         if waveform.ndim == 1:
             waveform = waveform.unsqueeze(0)
-        elif waveform.ndim == 3:
-            waveform = waveform.squeeze(0)
-        elif waveform.ndim != 2:
-            raise ValueError(f"Invalid waveform shape: {waveform.shape}")
+        elif waveform.ndim > 2:
+            waveform = waveform.squeeze()
 
         start, end = "start", "end"
         match = re.match(r"(.+?) --> (.+)", timestamp)
@@ -83,5 +83,6 @@ class SaveWavNodePadding:
         filename = f"{start}_to_{end}__{base_name}.wav"
         filepath = os.path.join(folder, filename)
 
+        print(f"Saving WAV: shape={waveform.shape}, sample_rate={sample_rate}, name={filename}")
         torchaudio.save(filepath, waveform, sample_rate)
         return (filepath, audio)
