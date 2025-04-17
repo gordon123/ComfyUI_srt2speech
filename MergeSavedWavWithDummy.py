@@ -1,5 +1,8 @@
+# ✅ Merge saved wav with dummy silence if needed
+
 import os
 import re
+import torchaudio
 from pydub import AudioSegment
 
 class MergeSavedWavWithDummy:
@@ -8,56 +11,62 @@ class MergeSavedWavWithDummy:
         return {
             "required": {
                 "file_path": ("STRING", {"multiline": False}),
+                "timestamp": ("STRING", {"multiline": False}),
+                "srt_file": ("STRING", {"multiline": False, "default": ""}),
             }
         }
 
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("merged_path",)
-    FUNCTION = "merge_audio"
+    FUNCTION = "merge"
     CATEGORY = "📺 Subtitle Tools"
 
-    def parse_time(self, t):
-        match = re.match(r"(\d+)_+(\d+)_+(\d+)s(\d+)ms", t)
+    def format_timestamp(self, t):
+        t = t.replace(",", ".")
+        h, m, s = t.split(":")
+        s, ms = s.split(".")
+        return f"{int(h):02}_{int(m):02}_{int(s)}s{int(ms)}ms"
+
+    def get_seconds(self, t):
+        t = t.replace(",", ".")
+        h, m, s = t.split(":")
+        s, ms = s.split(".")
+        return int(h) * 3600 + int(m) * 60 + int(s) + int(ms) / 1000
+
+    def merge(self, file_path, timestamp, srt_file):
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"Input file not found: {file_path}")
+
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        start, end = "start", "end"
+        match = re.match(r"(.+?) --> (.+)", timestamp)
         if match:
-            h, m, s, ms = map(int, match.groups())
-            return h * 3600 * 1000 + m * 60 * 1000 + s * 1000 + ms
-        return 0
+            start_time = match.group(1)
+            end_time = match.group(2)
+            start = self.format_timestamp(start_time)
+            end = self.format_timestamp(end_time)
+        else:
+            raise ValueError(f"Invalid timestamp format: {timestamp}")
 
-    def merge_audio(self, file_path):
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        dummy_base = os.path.join(base_dir, "assets")
-
-        filename = os.path.basename(file_path)
-        match = re.match(r"(.*?)_to_(.*?)__.*\\.wav", filename)
-
-        if not match:
-            print("[WARN] Filename format not matched.")
-            return (file_path,)
-
-        start_time = self.parse_time(match.group(1))
-        end_time = self.parse_time(match.group(2))
-        expected_ms = end_time - start_time
+        base_name = os.path.splitext(os.path.basename(srt_file))[0] if srt_file else "nosrt"
+        filename = f"{start}_to_{end}__{base_name}.wav"
+        output_folder = os.path.join(base_path, "assets", "audio_out")
+        os.makedirs(output_folder, exist_ok=True)
+        out_path = os.path.join(output_folder, filename)
 
         audio = AudioSegment.from_file(file_path)
         actual_ms = len(audio)
+        target_ms = int((self.get_seconds(end_time) - self.get_seconds(start_time)) * 1000)
 
-        if actual_ms >= expected_ms:
-            return (file_path,)
+        print(f"[DEBUG] File: {file_path}, actual={actual_ms}ms, expected={target_ms}ms")
 
-        sample_rate = audio.frame_rate
-        dummy_file = f"dummy{sample_rate // 1000}khz.wav"
-        dummy_path = os.path.join(dummy_base, dummy_file)
+        if actual_ms < target_ms:
+            sample_rate = audio.frame_rate
+            dummy_name = f"dummy{sample_rate // 1000}khz.wav"
+            dummy_path = os.path.join(base_path, "assets", dummy_name)
+            dummy = AudioSegment.from_file(dummy_path)
+            silence_needed = target_ms - actual_ms
+            audio += dummy[:silence_needed]
 
-        if not os.path.exists(dummy_path):
-            print(f"[ERROR] Dummy file not found: {dummy_path}")
-            return (file_path,)
-
-        silence_needed = expected_ms - actual_ms
-        dummy = AudioSegment.from_file(dummy_path)[:silence_needed]
-        merged = audio + dummy
-
-        new_path = file_path.replace(".wav", "_merged.wav")
-        merged.export(new_path, format="wav")
-        print(f"[INFO] Exported padded: {new_path}")
-
-        return (new_path,)
+        audio.export(out_path, format="wav")
+        return (out_path,)
