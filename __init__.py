@@ -9,7 +9,7 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "SaveWavNode": "Save WAV from TTS",
+    "SaveWavNode": "Save Wav from TTS",
     "GetSubtitleByIndex": "Get Subtitle By Index",
     "SaveWavNodePadding": "Save Wav with Padding",
 }
