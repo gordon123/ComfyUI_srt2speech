@@ -1,3 +1,6 @@
+#this node will make new directory srt_uploads in assets folder if it does not exist.
+#Update the file path to your own directory if you want to use it in your own project.
+#This node will read the srt file and return the subtitle text, timestamp, all subtitles, all timestamps and the srt file name.
 import os
 import re
 import inflect
@@ -5,7 +8,9 @@ import inflect
 class GetSubtitleByIndex:
     @classmethod
     def INPUT_TYPES(cls):
-        default_folder = "/workspace/ComfyUI/custom_nodes/ComfyUI_srt2speech/assets/srt_uploads"
+        # Get base path dynamically (folder that this script is in)
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        default_folder = os.path.join(base_path, "assets", "srt_uploads")
         os.makedirs(default_folder, exist_ok=True)
 
         srt_files = [f for f in os.listdir(default_folder) if f.lower().endswith(".srt")]
@@ -22,11 +27,13 @@ class GetSubtitleByIndex:
     RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING")
     RETURN_NAMES = ("subtitle_text", "timestamp", "all_subtitles", "all_timestamps", "srt_file")
     FUNCTION = "get_subtitle"
-    CATEGORY = "\ud83d\udcfa Subtitle Tools"
+    CATEGORY = "📺 Subtitle Tools"
 
     def get_subtitle(self, srt_file, index):
-        folder_path = "/workspace/ComfyUI/custom_nodes/ComfyUI_srt2speech/assets/srt_uploads"
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        folder_path = os.path.join(base_path, "assets", "srt_uploads")
         file_path = os.path.join(folder_path, srt_file)
+
         with open(file_path, "r", encoding="utf-8") as f:
             lines = f.read().strip().split("\n")
 
@@ -53,7 +60,7 @@ class GetSubtitleByIndex:
         text = subs[index]
         timestamp = times[index] if index < len(times) else ""
 
-        # แปลงตัวเลขในข้อความเป็นข้อความภาษาอังกฤษ
+        # convert numbers to words
         engine = inflect.engine()
         def replace_numbers(t):
             return re.sub(r'\d+(\.\d+)?', lambda x: engine.number_to_words(x.group()), t)

@@ -1,3 +1,7 @@
+# ✅ Fix waveform shape and backend. This node will save the audio into the wav format. file name with the timestamp.
+# Compare this snippet from SaveWAVNodePadding.py:
+# ✅ Use sox_io to avoid FFmpeg-related issues. This node will save the audio into the wav format.
+
 import os
 import re
 import torchaudio
@@ -26,7 +30,8 @@ class SaveWAVNode:
         return f"{int(h):02}_{int(m):02}_{int(s)}s{int(ms)}ms"
 
     def save_wav(self, audio, timestamp, srt_file):
-        folder = "./custom_nodes/ComfyUI_srt2speech/assets/audio_out"
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        folder = os.path.join(base_path, "assets", "audio_out")
         os.makedirs(folder, exist_ok=True)
 
         waveform = audio["waveform"]
