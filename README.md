@@ -4,11 +4,11 @@ I tested this TTS3 on the Runpod, with ComfyUI native installing. <br>
 I make this custom node to read srt subtitle file and send it to MegaTTS node to generate dub Eng, or Chinese for now.​ <br> 
 It should work with other TTS or similar for ComfyUI, in the end I wil combine with Wan2.1 or any other Lipsync. ​ <br> 
 My aim try to do !1CLICK make all the job.​ <br> 
-(ComfyUI portable version, please use embbeded python!)  <br> 
+(ComfyUI portable version, please use embed python folder!)  <br> 
 
 This instruction for myself is using [Runpod.com Gpu cloud service](https://runpod.io?ref=c0v5p0ys), if you use your own local computer, please check your file path. <br>
 
-## For my personal TESTING repo!
+## For my personal TESTING repo! I use MegaTTS as text to speech, install this repo first.
 
 1. Install ComfyUI-MegaTTS custom node via custom manager [ComfyUI-MegaTTS](https://github.com/1038lab/ComfyUI-MegaTTS) <br>
 2. Go to custom node,
@@ -43,10 +43,15 @@ apt update && apt install -y ffmpeg
 ---
 **To install my repo**
 1. use git clone
+then activate virtual environment 
+```
+source myvenv/bin/activate
+```
 2. pip instal the requirements.txt
 
 ---
-**To download files in my assest to the Runpod workspace, activate venv.**  <br>
+**To download files in my asset to the Runpod workspace, activate venv.**  <br>
+These files for my own Convenient to use this demo voice for my code, it is the same from original TTS3 repo in the google drive above, if you are using Runpod, you can use code below to copy it into MegaTTS/voices
 
 ```
 source myvenv/bin/activate

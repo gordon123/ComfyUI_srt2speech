@@ -2,7 +2,6 @@ from .SaveWavNode import SaveWAVNode
 from .GetSubtitleByIndex import GetSubtitleByIndex
 from .SaveWavNodePadding import SaveWAVNodePadding
 
-
 NODE_CLASS_MAPPINGS = {
     "SaveWAVNode": SaveWAVNode,
     "GetSubtitleByIndex": GetSubtitleByIndex,
