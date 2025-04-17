@@ -7,7 +7,7 @@ import re
 import torchaudio
 import torch
 
-class SaveWAVNode:
+class SaveWavNode:
     @classmethod
     def INPUT_TYPES(cls):
         return {

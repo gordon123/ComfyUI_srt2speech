@@ -8,7 +8,7 @@ import torchaudio
 import torch
 import torch.nn.functional as F
 
-class SaveWAVNodePadding:
+class SaveWavNodePadding:
     @classmethod
     def INPUT_TYPES(cls):
         return {
