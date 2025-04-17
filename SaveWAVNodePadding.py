@@ -46,6 +46,8 @@ class SaveWavNodePadding:
         return waveform
 
     def save_wav(self, audio, timestamp, srt_file, pad_audio):
+        torchaudio.set_audio_backend("sox_io")  # Ensure backend compatibility
+
         base_path = os.path.dirname(os.path.abspath(__file__))
         folder = os.path.join(base_path, "assets", "audio_out")
         dummy_path = os.path.join(base_path, "assets", "dummy.wav")
