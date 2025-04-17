@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*- sometimes the TTS3 generate quicker than the subtitle, this node will fill the quiet time with silence
 # -*- coding: utf-8 -*- 
-# This node will fill the quiet time with silence if TTS ends before the subtitle ends
+# This node will fill the quiet time with silence if TTS ends before the subtitle ends 
 
 import os
 import re
