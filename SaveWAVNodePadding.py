@@ -45,6 +45,7 @@ class SaveWavNodePadding:
         return waveform
 
     def save_wav(self, audio, timestamp, srt_file, pad_audio):
+        # 🔁 ใช้ relative path อิงจากตำแหน่งไฟล์นี้
         base_path = os.path.dirname(os.path.abspath(__file__))
         folder = os.path.join(base_path, "assets", "audio_out")
         os.makedirs(folder, exist_ok=True)
@@ -52,11 +53,10 @@ class SaveWavNodePadding:
         waveform = audio["waveform"]
         sample_rate = audio["sample_rate"]
 
-        # ✅ Ensure waveform is 2D (channels, samples)
         if waveform.ndim == 1:
-            waveform = waveform.unsqueeze(0)
+            waveform = waveform.unsqueeze(0)  # [samples] → [1, samples]
         elif waveform.ndim == 3:
-            waveform = waveform.squeeze(0)
+            waveform = waveform.squeeze(0)    # [1, channels, samples] → [channels, samples]
         elif waveform.ndim != 2:
             raise ValueError(f"Unexpected waveform shape: {waveform.shape}")
 
