@@ -10,7 +10,7 @@ This instruction for myself is using [Runpod.com Gpu cloud service](https://runp
 
 ## For my personal TESTING repo! I use MegaTTS as text to speech, install this repo first.
 
-1. Install ComfyUI-MegaTTS custom node via custom manager [ComfyUI-MegaTTS](https://github.com/1038lab/ComfyUI-MegaTTS) <br>
+1. Install ComfyUI-MegaTTS custom node via custom manager [ComfyUI-MegaTTS](https://github.com/1038lab/ComfyUI-MegaTTS) by AIlab <br>
 2. Go to custom node,
    
 ```
