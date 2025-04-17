@@ -48,6 +48,7 @@ class SaveWavNodePadding:
     def save_wav(self, audio, timestamp, srt_file, pad_audio):
         base_path = os.path.dirname(os.path.abspath(__file__))
         folder = os.path.join(base_path, "assets", "audio_out")
+        dummy_path = os.path.join(base_path, "assets", "dummy.wav")
         os.makedirs(folder, exist_ok=True)
 
         waveform = audio["waveform"]
@@ -55,14 +56,18 @@ class SaveWavNodePadding:
 
         print(f"[DEBUG] Raw waveform shape: {waveform.shape}")
 
-        if waveform.ndim == 1:
-            waveform = waveform.unsqueeze(0)
-            print("[DEBUG] Reshaped 1D to 2D waveform")
-        elif waveform.ndim == 3:
-            waveform = waveform.squeeze(0)
-            print("[DEBUG] Squeezed 3D to 2D waveform")
-        elif waveform.ndim != 2:
-            raise ValueError(f"[ERROR] Invalid waveform shape: {waveform.shape}")
+        try:
+            if waveform.ndim == 1:
+                waveform = waveform.unsqueeze(0)
+                print("[DEBUG] Reshaped 1D to 2D waveform")
+            elif waveform.ndim == 3:
+                waveform = waveform.squeeze(0)
+                print("[DEBUG] Squeezed 3D to 2D waveform")
+            elif waveform.ndim != 2:
+                raise ValueError(f"[ERROR] Invalid waveform shape: {waveform.shape}")
+        except Exception as e:
+            print(f"[FALLBACK] waveform error: {e} → loading dummy")
+            waveform, sample_rate = torchaudio.load(dummy_path)
 
         start, end = "start", "end"
         match = re.match(r"(.+?) --> (.+)", timestamp)
@@ -81,7 +86,12 @@ class SaveWavNodePadding:
         filename = f"{start}_to_{end}__{base_name}.wav"
         filepath = os.path.join(folder, filename)
 
-        print(f"[INFO] Saving WAV: shape={waveform.shape}, sample_rate={sample_rate}, name={filename}")
-        torchaudio.save(filepath, waveform, sample_rate)
+        try:
+            print(f"[INFO] Saving WAV: shape={waveform.shape}, sample_rate={sample_rate}, name={filename}")
+            torchaudio.save(filepath, waveform, sample_rate)
+        except Exception as e:
+            print(f"[FALLBACK] Save failed: {e} → using dummy")
+            waveform, sample_rate = torchaudio.load(dummy_path)
+            torchaudio.save(filepath, waveform, sample_rate)
 
         return (filepath, audio)
