@@ -15,7 +15,7 @@ class SaveWavNodePadding:
                 "audio": ("AUDIO",),
                 "timestamp": ("STRING", {"multiline": False}),
                 "srt_file": ("STRING", {"multiline": False, "default": ""}),
-                "pad_audio": ("BOOLEAN", {"default": False})
+                "pad_audio": ("BOOLEAN", {"default": True})
             }
         }
 
