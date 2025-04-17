@@ -7,6 +7,8 @@ import torchaudio
 import torch
 import torch.nn.functional as F
 
+torchaudio.set_audio_backend("sox_io")  # ensure sox_io backend used consistently
+
 class SaveWavNodePadding:
     @classmethod
     def INPUT_TYPES(cls):
@@ -86,8 +88,13 @@ class SaveWavNodePadding:
         filename = f"{start}_to_{end}__{base_name}.wav"
         filepath = os.path.join(folder, filename)
 
+        # 🛠 Ensure waveform is 2D [channels, samples] and channel is mono
+        if waveform.ndim == 1:
+            waveform = waveform.unsqueeze(0)
+        elif waveform.ndim == 2 and waveform.shape[0] != 1:
+            waveform = torch.mean(waveform, dim=0, keepdim=True)
+
         try:
-            torchaudio.set_audio_backend("sox_io")
             print(f"[INFO] Saving WAV: shape={waveform.shape}, sample_rate={sample_rate}, name={filename}")
             torchaudio.save(filepath, waveform, sample_rate)
         except Exception as e:
