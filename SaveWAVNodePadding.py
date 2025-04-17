@@ -38,15 +38,8 @@ class SaveWavNodePadding:
         return int(h) * 3600 + int(m) * 60 + int(s) + int(ms) / 1000
 
     def pad_audio_to_duration(self, waveform, sample_rate, target_duration_sec):
-        if waveform.ndim == 0:
-            raise ValueError("Waveform is empty")
-        elif waveform.ndim == 1:
-            waveform = waveform.unsqueeze(0)  # [samples] → [1, samples]
-        elif waveform.ndim > 2:
-            waveform = waveform.squeeze()
-
-        if waveform.ndim != 2:
-            raise ValueError(f"Waveform shape not suitable for padding: {waveform.shape}")
+        if waveform is None or waveform.ndim < 2:
+            raise ValueError(f"Invalid waveform shape for padding: {waveform.shape if waveform is not None else 'None'}")
 
         current_duration = waveform.shape[1] / sample_rate
         if current_duration < target_duration_sec:
@@ -55,6 +48,7 @@ class SaveWavNodePadding:
         return waveform
 
     def save_wav(self, audio, timestamp, srt_file, pad_audio):
+        # 🔁 ใช้ relative path อิงจากตำแหน่งไฟล์นี้
         base_path = os.path.dirname(os.path.abspath(__file__))
         folder = os.path.join(base_path, "assets", "audio_out")
         os.makedirs(folder, exist_ok=True)
