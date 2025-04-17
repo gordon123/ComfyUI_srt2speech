@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
-# This node will fill the quiet time with silence if TTS ends before the subtitle ends
+# ✅ Fix waveform shape and backend. This node will save the audio into the wav format. file name with the timestamp.
+# ✅ Add dummy merge to fill silence if needed (PyDub)
 
 import os
 import re
 import torchaudio
 import torch
-import torch.nn.functional as F
+from pydub import AudioSegment
 
 class SaveWavNodePadding:
     @classmethod
@@ -15,7 +15,7 @@ class SaveWavNodePadding:
                 "audio": ("AUDIO",),
                 "timestamp": ("STRING", {"multiline": False}),
                 "srt_file": ("STRING", {"multiline": False, "default": ""}),
-                "pad_audio": ("BOOLEAN", {"default": False})  # default is now False to match SaveWavNode behavior
+                "pad_audio": ("BOOLEAN", {"default": True})
             }
         }
 
@@ -36,19 +36,6 @@ class SaveWavNodePadding:
         s, ms = s.split(".")
         return int(h) * 3600 + int(m) * 60 + int(s) + int(ms) / 1000
 
-    def pad_audio_to_duration(self, waveform, sample_rate, target_duration_sec):
-        if waveform.ndim == 1:
-            waveform = waveform.unsqueeze(0)
-        elif waveform.ndim == 3:
-            waveform = waveform.squeeze(0)
-        elif waveform.ndim != 2:
-            raise ValueError(f"Invalid waveform shape: {waveform.shape}")
-        current_duration = waveform.shape[1] / sample_rate
-        if current_duration < target_duration_sec:
-            pad_samples = int((target_duration_sec - current_duration) * sample_rate)
-            waveform = F.pad(waveform, (0, pad_samples))
-        return waveform
-
     def save_wav(self, audio, timestamp, srt_file, pad_audio):
         base_path = os.path.dirname(os.path.abspath(__file__))
         folder = os.path.join(base_path, "assets", "audio_out")
@@ -62,7 +49,9 @@ class SaveWavNodePadding:
         elif waveform.ndim == 3:
             waveform = waveform.squeeze(0)
         elif waveform.ndim != 2:
-            raise ValueError(f"Invalid waveform shape: {waveform.shape}")
+            raise ValueError(f"Unexpected waveform shape: {waveform.shape}")
+
+        torchaudio.set_audio_backend("sox_io")
 
         start, end = "start", "end"
         match = re.match(r"(.+?) --> (.+)", timestamp)
@@ -72,17 +61,26 @@ class SaveWavNodePadding:
             start = self.format_timestamp(start_time)
             end = self.format_timestamp(end_time)
 
+            audio_segment = AudioSegment(
+                waveform.numpy().T.tobytes(),
+                frame_rate=sample_rate,
+                sample_width=waveform.element_size(),
+                channels=waveform.shape[0]
+            )
+
             if pad_audio:
-                start_sec = self.get_seconds(start_time)
-                end_sec = self.get_seconds(end_time)
-                waveform = self.pad_audio_to_duration(waveform, sample_rate, end_sec - start_sec)
+                actual_ms = len(audio_segment)
+                target_ms = int((self.get_seconds(end_time) - self.get_seconds(start_time)) * 1000)
+
+                if actual_ms < target_ms:
+                    dummy_path = os.path.join(base_path, "assets", f"dummy{sample_rate // 1000}khz.wav")
+                    dummy = AudioSegment.from_file(dummy_path)[:(target_ms - actual_ms)]
+                    audio_segment += dummy
 
         base_name = os.path.splitext(os.path.basename(srt_file))[0] if srt_file else "nosrt"
         filename = f"{start}_to_{end}__{base_name}.wav"
         filepath = os.path.join(folder, filename)
 
-        # ✅ Use sox_io like in SaveWavNode to avoid ffmpeg issues
-        torchaudio.set_audio_backend("sox_io")
-        torchaudio.save(filepath, waveform, sample_rate)
+        audio_segment.export(filepath, format="wav")
 
         return (filepath, audio)
