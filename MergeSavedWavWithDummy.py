@@ -8,7 +8,7 @@ import torchaudio
 import torch
 from pydub import AudioSegment
 
-class SaveWavNodePadding:
+class MergeSavedWavWithDummy:
     @classmethod
     def INPUT_TYPES(cls):
         audio_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "audio_out")
