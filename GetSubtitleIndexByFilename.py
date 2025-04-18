@@ -14,40 +14,56 @@ class GetSubtitleIndexByFilename:
             }
         }
 
-    RETURN_TYPES = ("INT", "STRING", "STRING")
-    RETURN_NAMES = ("index", "subtitle_text", "timestamp")
+    RETURN_TYPES = ("INT", "STRING", "STRING",)
+    RETURN_NAMES = ("index", "subtitle", "timestamp",)
     FUNCTION = "find_index"
     CATEGORY = "📺 Subtitle Tools"
 
-    def parse_timestamp(self, ts):
-        ts = ts.replace(",", ".")
-        h, m, s = ts.split(":")
-        if "." in s:
-            s, ms = s.split(".")
-        else:
-            s, ms = s, "0"
+    def parse_srt(self, srt_path):
+        with open(srt_path, 'r', encoding='utf-8') as f:
+            lines = f.read().split('\n')
+
+        index, text, timestamps = -1, [], []
+        temp_text, temp_time = '', ''
+        for line in lines:
+            if re.match(r"^\d+$", line):
+                if temp_text and temp_time:
+                    text.append(temp_text.strip())
+                    timestamps.append(temp_time.strip())
+                index = int(line)
+                temp_text, temp_time = '', ''
+            elif '-->' in line:
+                temp_time = line
+            elif line.strip():
+                temp_text += ' ' + line
+        if temp_text and temp_time:
+            text.append(temp_text.strip())
+            timestamps.append(temp_time.strip())
+        return list(zip(timestamps, text))
+
+    def get_seconds(self, t):
+        t = t.replace(",", ".")
+        h, m, s = t.split(":")
+        s, ms = s.split(".")
         return int(h) * 3600 + int(m) * 60 + int(s) + int(ms) / 1000
 
-    def find_index(self, file_path, srt_file):
-        # Extract start timestamp from filename
-        match = re.match(r"(\d+_\d+s\d+ms)_to_", file_path)
+    def extract_start_seconds_from_filename(self, filename):
+        # Example: 00_00_24s599ms_to_00_00_29s840ms__test-5min.wav
+        match = re.match(r"(\d{2})_(\d{2})_(\d{2})s(\d{1,3})ms", filename)
         if not match:
             raise ValueError("Cannot parse start time from filename")
+        h, m, s, ms = map(int, match.groups())
+        return h * 3600 + m * 60 + s + ms / 1000
 
-        start_str = match.group(1).replace("_", ":").replace("s", ".").replace("ms", "")
-        start_sec = self.parse_timestamp(start_str)
+    def find_index(self, file_path, srt_file):
+        file_base = os.path.basename(file_path)
+        file_seconds = self.extract_start_seconds_from_filename(file_base)
 
-        # Read the .srt file
-        full_srt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "srt_uploads", srt_file)
-        with open(full_srt_path, "r", encoding="utf-8") as f:
-            content = f.read()
+        entries = self.parse_srt(srt_file)
+        for idx, (timestamp, text) in enumerate(entries):
+            start = timestamp.split('-->')[0].strip()
+            start_sec = self.get_seconds(start)
+            if abs(start_sec - file_seconds) < 0.5:  # allow slight rounding tolerance
+                return (idx, text, timestamp)
 
-        entries = re.findall(r"(\d+)\n(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})\n(.*?)\n\n", content, re.DOTALL)
-
-        for idx, start, end, text in entries:
-            start_sec_srt = self.parse_timestamp(start)
-            end_sec_srt = self.parse_timestamp(end)
-            if start_sec_srt <= start_sec <= end_sec_srt:
-                return (int(idx)-1, text.strip(), f"{start} --> {end}")
-
-        return (-1, "Not found", "")
+        raise ValueError("Subtitle not found for this file")
