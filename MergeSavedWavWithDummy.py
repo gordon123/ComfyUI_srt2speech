@@ -1,5 +1,4 @@
-# ✅ Fix waveform shape and backend. Merge saved wav file with dummy silence if needed.
-# ✅ Automatically load files from audio_out folder
+# ✅ Fix waveform shape and backend. This node will merge wav + dummy if too short.
 
 import os
 import re
@@ -13,7 +12,7 @@ class MergeSavedWavWithDummy:
         return {
             "required": {
                 "timestamp": ("STRING", {"multiline": False}),
-                "srt_file": ("STRING", {"multiline": False, "default": ""})
+                "srt_file": ("STRING", {"multiline": False}),
             },
             "optional": {
                 "file_path": ("STRING", {"multiline": False})
@@ -39,36 +38,38 @@ class MergeSavedWavWithDummy:
 
     def merge_wav(self, timestamp, srt_file, file_path=None):
         base_path = os.path.dirname(os.path.abspath(__file__))
-        out_folder = os.path.join(base_path, "assets", "audio_out")
+        audio_dir = os.path.join(base_path, "assets", "audio_out")
+        dummy_dir = os.path.join(base_path, "assets")
 
-        start, end = "start", "end"
         match = re.match(r"(.+?) --> (.+)", timestamp)
-        if match:
-            start_time = match.group(1)
-            end_time = match.group(2)
-            start = self.format_timestamp(start_time)
-            end = self.format_timestamp(end_time)
+        if not match:
+            raise ValueError("Invalid timestamp format")
 
-        # Auto match filename from pattern if not provided
-        if not file_path:
-            base_name = os.path.splitext(os.path.basename(srt_file))[0] if srt_file else "nosrt"
-            target_filename = f"{start}_to_{end}__{base_name}.wav"
-            file_path = os.path.join(out_folder, target_filename)
-
-        print(f"[INFO] Loading {file_path}")
-
-        # Load and check duration
-        audio = AudioSegment.from_file(file_path)
-        actual_ms = len(audio)
+        start_time, end_time = match.group(1), match.group(2)
         target_ms = int((self.get_seconds(end_time) - self.get_seconds(start_time)) * 1000)
 
-        # Only pad if too short
+        # infer file name from timestamp if not explicitly passed
+        if not file_path:
+            start = self.format_timestamp(start_time)
+            end = self.format_timestamp(end_time)
+            base_name = os.path.splitext(os.path.basename(srt_file))[0] if srt_file else "nosrt"
+            file_path = os.path.join(audio_dir, f"{start}_to_{end}__{base_name}.wav")
+
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"Wav file not found: {file_path}")
+
+        audio = AudioSegment.from_file(file_path)
+        actual_ms = len(audio)
+
         if actual_ms < target_ms:
-            dummy_path = os.path.join(base_path, "assets", f"dummy{audio.frame_rate // 1000}khz.wav")
-            silence = AudioSegment.from_file(dummy_path)[:(target_ms - actual_ms)]
-            audio += silence
-            print(f"[INFO] Padded with {len(silence)}ms dummy silence")
+            sample_rate = audio.frame_rate
+            dummy_path = os.path.join(dummy_dir, f"dummy{sample_rate // 1000}khz.wav")
+            if not os.path.exists(dummy_path):
+                raise FileNotFoundError(f"Dummy file not found: {dummy_path}")
+            dummy = AudioSegment.from_file(dummy_path)[:target_ms - actual_ms]
+            audio += dummy
 
         merged_path = file_path.replace(".wav", "_merged.wav")
         audio.export(merged_path, format="wav")
+
         return (merged_path,)
