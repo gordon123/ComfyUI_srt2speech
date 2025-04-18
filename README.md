@@ -49,7 +49,7 @@ source myvenv/bin/activate
 2. pip instal the requirements.txt
 
 ---
-**To download files in my asset to the Runpod workspace, activate venv. if you use your local computer just copy/paste and ignore code below**  <br>
+**To download files in my asset to the Runpod workspace, activate venv first. If you use your local computer just copy/paste and ignore code below**  <br>
 These files for my own Convenient to use this demo voice for my code, it is the same from original TTS3 repo in the google drive above, if you are using Runpod, you can use code below to copy it into MegaTTS/voices
 
 ```
