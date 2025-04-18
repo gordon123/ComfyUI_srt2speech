@@ -18,8 +18,8 @@ class SaveWavNode:
             }
         }
 
-    RETURN_TYPES = ("STRING", "AUDIO", "FLOAT",)
-    RETURN_NAMES = ("saved_path", "audio", "duration_sec",)
+    RETURN_TYPES = ("STRING", "AUDIO",)
+    RETURN_NAMES = ("saved_path", "audio",)
     FUNCTION = "save_wav"
     CATEGORY = "📺 Subtitle Tools"
 
@@ -61,6 +61,4 @@ class SaveWavNode:
         print(f"Saving WAV: shape={waveform.shape}, sample_rate={sample_rate}, name={filename}")
         torchaudio.save(filepath, waveform, sample_rate)
 
-        duration_sec = waveform.shape[1] / sample_rate
-
-        return (filepath, audio, duration_sec)
+        return (filepath, audio)
