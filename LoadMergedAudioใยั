@@ -1,0 +1,24 @@
+import torchaudio
+import os
+
+class LoadMergedAudio:
+    @classmethod
+    def INPUT_TYPES(cls):
+        merge_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "merge_audio")
+        files = [f for f in os.listdir(merge_dir) if f.endswith(".wav")]
+        files.sort()
+        return {
+            "required": {
+                "file_path": (files,),
+            }
+        }
+
+    RETURN_TYPES = ("AUDIO",)
+    RETURN_NAMES = ("audio",)
+    FUNCTION = "load_audio"
+    CATEGORY = "📺 Subtitle Tools"
+
+    def load_audio(self, file_path):
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "merge_audio", file_path)
+        waveform, sample_rate = torchaudio.load(path)
+        return ({"waveform": waveform, "sample_rate": sample_rate},)
