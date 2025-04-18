@@ -50,7 +50,7 @@ source myvenv/bin/activate
 
 ---
 **To download files in my asset to the Runpod workspace, activate venv first. If you use your local computer just copy/paste and ignore code below**  <br>
-These files for my own Convenient to use this demo voice for my code, it is the same from original TTS3 repo in the google drive above, if you are using Runpod, you can use code below to copy it into MegaTTS/voices
+These files for my own Convenient to use this demo voice for my code, it is the same from original TTS3 repo in the google drive above. If you are using Runpod, you can use code below to copy it into ComfyUI_MegaTTS/voices
 
 ```
 source myvenv/bin/activate
