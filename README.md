@@ -30,7 +30,7 @@ apt update && apt install -y ffmpeg
 9. now it ready to do Text2speech <br>
 
 --- 
-**===== to create your own voice model ===** <br>
+**===== to clone your own voice model from MegaTTS custom node ===** <br>
 
 1. I use Audacity to record myself about 10-15sec, reading some English clearly avoid noise <br>
 2. Export it as a "*.wav" (Make file name for your to remember easily) with Mono, 16 - 24 kHz and upload here ["wav_queue" folder of Google drive](https://drive.google.com/drive/folders/1gCWL1y_2xu9nIFhUX_OW5MbcFuB7J5Cl) <br>
