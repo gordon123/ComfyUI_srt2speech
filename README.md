@@ -55,7 +55,7 @@ These files for my own Convenient to use this demo voice for my code, it is the 
 ```
 source myvenv/bin/activate
 ```
-download all .wav and .npy, copy and paste the code below into the Runpod terminal <br>
+To download all *.wav and *.npy from my asset folder, copy and paste the code below into the Runpod terminal in side voice folder of MegaTTS custom node <br>
 
 MegaTTS node require, .wav file or .nyp file put in their custom node | ComfyUI/custom_nodes/ComfyUI-MegaTTS/voices folder <br>
 
