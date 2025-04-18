@@ -1,8 +1,10 @@
-# ✅ Merge saved wav with dummy silence if needed
+# ✅ Fix waveform shape and backend. Merge saved wav file with dummy silence if needed.
+# ✅ Automatically load files from audio_out folder
 
 import os
 import re
 import torchaudio
+import torch
 from pydub import AudioSegment
 
 class MergeSavedWavWithDummy:
@@ -10,15 +12,17 @@ class MergeSavedWavWithDummy:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "file_path": ("STRING", {"multiline": False}),
                 "timestamp": ("STRING", {"multiline": False}),
-                "srt_file": ("STRING", {"multiline": False, "default": ""}),
+                "srt_file": ("STRING", {"multiline": False, "default": ""})
+            },
+            "optional": {
+                "file_path": ("STRING", {"multiline": False})
             }
         }
 
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("merged_path",)
-    FUNCTION = "merge"
+    FUNCTION = "merge_wav"
     CATEGORY = "📺 Subtitle Tools"
 
     def format_timestamp(self, t):
@@ -33,11 +37,10 @@ class MergeSavedWavWithDummy:
         s, ms = s.split(".")
         return int(h) * 3600 + int(m) * 60 + int(s) + int(ms) / 1000
 
-    def merge(self, file_path, timestamp, srt_file):
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"Input file not found: {file_path}")
-
+    def merge_wav(self, timestamp, srt_file, file_path=None):
         base_path = os.path.dirname(os.path.abspath(__file__))
+        out_folder = os.path.join(base_path, "assets", "audio_out")
+
         start, end = "start", "end"
         match = re.match(r"(.+?) --> (.+)", timestamp)
         if match:
@@ -45,28 +48,27 @@ class MergeSavedWavWithDummy:
             end_time = match.group(2)
             start = self.format_timestamp(start_time)
             end = self.format_timestamp(end_time)
-        else:
-            raise ValueError(f"Invalid timestamp format: {timestamp}")
 
-        base_name = os.path.splitext(os.path.basename(srt_file))[0] if srt_file else "nosrt"
-        filename = f"{start}_to_{end}__{base_name}.wav"
-        output_folder = os.path.join(base_path, "assets", "audio_out")
-        os.makedirs(output_folder, exist_ok=True)
-        out_path = os.path.join(output_folder, filename)
+        # Auto match filename from pattern if not provided
+        if not file_path:
+            base_name = os.path.splitext(os.path.basename(srt_file))[0] if srt_file else "nosrt"
+            target_filename = f"{start}_to_{end}__{base_name}.wav"
+            file_path = os.path.join(out_folder, target_filename)
 
+        print(f"[INFO] Loading {file_path}")
+
+        # Load and check duration
         audio = AudioSegment.from_file(file_path)
         actual_ms = len(audio)
         target_ms = int((self.get_seconds(end_time) - self.get_seconds(start_time)) * 1000)
 
-        print(f"[DEBUG] File: {file_path}, actual={actual_ms}ms, expected={target_ms}ms")
-
+        # Only pad if too short
         if actual_ms < target_ms:
-            sample_rate = audio.frame_rate
-            dummy_name = f"dummy{sample_rate // 1000}khz.wav"
-            dummy_path = os.path.join(base_path, "assets", dummy_name)
-            dummy = AudioSegment.from_file(dummy_path)
-            silence_needed = target_ms - actual_ms
-            audio += dummy[:silence_needed]
+            dummy_path = os.path.join(base_path, "assets", f"dummy{audio.frame_rate // 1000}khz.wav")
+            silence = AudioSegment.from_file(dummy_path)[:(target_ms - actual_ms)]
+            audio += silence
+            print(f"[INFO] Padded with {len(silence)}ms dummy silence")
 
-        audio.export(out_path, format="wav")
-        return (out_path,)
+        merged_path = file_path.replace(".wav", "_merged.wav")
+        audio.export(merged_path, format="wav")
+        return (merged_path,)
