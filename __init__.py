@@ -3,6 +3,7 @@ from .GetSubtitleByIndex import GetSubtitleByIndex
 from .MergeWithDummySilence import MergeWithDummySilence
 from .MergeSavedWavWithDummy import MergeSavedWavWithDummy
 from .LoadMergedAudio import LoadMergedAudio
+from .GetSubtitleIndexByFilename import GetSubtitleIndexByFilename
 
 NODE_CLASS_MAPPINGS = {
     "SaveWavNode": SaveWavNode,
@@ -10,6 +11,7 @@ NODE_CLASS_MAPPINGS = {
     "MergeWithDummySilence": MergeWithDummySilence,
     "MergeSavedWavWithDummy": MergeSavedWavWithDummy,
     "LoadMergedAudio": LoadMergedAudio,
+    "GetSubtitleIndexByFilename": GetSubtitleIndexByFilename,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -18,6 +20,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "MergeWithDummySilence": "Merge with Dummy Silence",
     "MergeSavedWavWithDummy": "Merge Saved Wav with Dummy",
     "LoadMergedAudio": "Load Merged Audio",
+    "GetSubtitleIndexByFilename": "Get Subtitle Index By Filename",
 }
 
 WEB_DIRECTORY = "./web"
