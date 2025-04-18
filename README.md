@@ -23,7 +23,7 @@ apt update && apt install -y ffmpeg
 ```
 
 4. restart ComfyUI <br>
-5. create your own 10sec-15sec *.wav file with mono! 16-24 kHz, or take any .wav file in this repo folder <br>
+5. create your own 10sec-15sec *.wav file with mono! 16-24 kHz, or take any .wav file in this asset folder <br>
 6. use Voice maker to download all the model first time ! <br>
 7. it will create new folder in /workspace/ComfyUI/models/TTS and all models from [MegaTTS3](https://huggingface.co/ByteDance/MegaTTS3) <br>
 8. copy .wav and .npy from assets example files into  /workspace/ComfyUI/custom_nodes/ComfyUI-MegaTTS/voices <br>
