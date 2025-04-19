@@ -82,7 +82,7 @@ class MergeSubtitleAudio:
 
             prefix = start.replace(",", "_").replace(":", "_").replace(".", "s")
             try:
-                audio_file = next(f for f in os.listdir(audio_out_path) if prefix in f)
+                audio_file = next(f for f in os.listdir(audio_out_path) if f.startswith(prefix))
                 seg = AudioSegment.from_file(os.path.join(audio_out_path, audio_file))
                 actual_ms = len(seg)
                 if actual_ms < target_ms:
