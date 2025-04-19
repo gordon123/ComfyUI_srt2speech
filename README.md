@@ -78,7 +78,35 @@ for f in r.json():
 
 ---
 **To use my Custom node**
---- SOON ----
+If you are using ComfyUI-MegaTTS same as mine, you can follow instruction here, otherwise other TTS should also work.
+
+1. install MegaTTS of AIlab via Custom manager
+2. go to ComfyUI-MegaTTS  and run 
+
+```
+pip install -r requirements.txt
+```
+
+3. If you use local computer, check if you have ffmpeg, for me I use Runpod GPU cloud, linux system run this command
+
+```   
+apt update && apt install -y ffmpeg
+```
+
+Researt Comfyui server, reload webui page
+
+4. Go to my [ComfyUI_srt2speech](https://github.com/gordon123/ComfyUI_srt2speech/tree/main/assets/wav-npy) download any models of .wav and .npy both must be the same name, and use wav file upload into voice maker click Run first time. **For more example how to clone your own voice go to ComfyUI-MegaTTS github page.
+
+5. Run MegaTTS voice maker once. It will be downloaded  some models in this folder models/TTS/MegaTTS3
+6. Restart ComfyUi, refresh webui
+7. Upload all *.wav and *.npy into the ComfyUI-MegaTTS/voices/ folder (small voices)
+8. Refresh webui and now you can use reference_voice in the MegaTTS3
+![alt text](<example_workflow/srt2speech and MegaTTS3 workflow.png>)
+
+9. set Run to run instant to be auto generated text2speech the whole subtitle
+
+<img src="Screenshot 2025-04-19 at 20.50.41.png" alt="drawing" style="width:200px;"/> <br>
+Enjoys!
 
 
 
