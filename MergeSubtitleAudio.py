@@ -20,7 +20,7 @@ class MergeSubtitleAudio:
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("merged_file_path",)
     FUNCTION = "merge"
-    CATEGORY = "📺 Subtitle Tools"
+    CATEGORY = "🎮 Subtitle Tools"
 
     def format_timestamp(self, t):
         t = t.replace(",", ".")
@@ -28,17 +28,17 @@ class MergeSubtitleAudio:
         s, ms = s.split(".")
         return f"{int(h):02}:{int(m):02}:{int(s)}.{int(ms):03}"
 
+    def format_timestamp_for_filename(self, t):
+        t = t.replace(",", ".")
+        h, m, s = t.split(":")
+        s, ms = s.split(".")
+        return f"{int(h):02}_{int(m):02}_{int(s)}s{int(ms)}ms"
+
     def get_seconds(self, t):
         t = t.replace(",", ".")
         h, m, s = t.split(":")
         s, ms = s.split(".")
         return int(h) * 3600 + int(m) * 60 + int(s) + int(ms) / 1000
-
-    def format_filename_prefix(self, t):
-        t = t.replace(",", ".")
-        h, m, s = t.split(":")
-        s, ms = s.split(".")
-        return f"{int(h):02}_{int(m):02}_{int(s)}s{int(ms)}ms"
 
     def parse_srt(self, srt_path):
         with open(srt_path, 'r', encoding='utf-8') as f:
@@ -86,11 +86,9 @@ class MergeSubtitleAudio:
             end_sec = self.get_seconds(end)
             target_ms = int((end_sec - start_sec) * 1000)
 
-            file_prefix = self.format_filename_prefix(start)
-            matches = [f for f in os.listdir(audio_out_path) if file_prefix in f]
-
-            if matches:
-                audio_file = matches[0]
+            file_prefix = self.format_timestamp_for_filename(start)
+            try:
+                audio_file = next(f for f in os.listdir(audio_out_path) if file_prefix in f)
                 seg = AudioSegment.from_file(os.path.join(audio_out_path, audio_file))
                 actual_ms = len(seg)
                 if actual_ms < target_ms:
@@ -99,7 +97,7 @@ class MergeSubtitleAudio:
                 elif actual_ms > target_ms:
                     seg = seg[:target_ms]
                 merged += seg
-            else:
+            except StopIteration:
                 print(f"[DEBUG] No match for {start} → using dummy")
                 merged += dummy_24khz[:target_ms]
 
