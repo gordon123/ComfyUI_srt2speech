@@ -5,19 +5,21 @@ from .MergeSelectedAudioFiles import MergeSelectedAudioFiles
 
 import os
 
-# List all SRT files and dummy folder
 ASSETS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
 SRT_UPLOAD_PATH = os.path.join(ASSETS_PATH, "srt_uploads")
-SRT_FILES = [os.path.join(SRT_UPLOAD_PATH, f) for f in os.listdir(SRT_UPLOAD_PATH) if f.endswith(".srt")]
 DUMMY_DIR_OPTIONS = [ASSETS_PATH]
+
+# ป้องกัน error ถ้า folder ว่าง
+SRT_FILES = []
+if os.path.exists(SRT_UPLOAD_PATH):
+    SRT_FILES = [os.path.join(SRT_UPLOAD_PATH, f) for f in os.listdir(SRT_UPLOAD_PATH) if f.endswith(".srt")]
 
 NODE_CLASS_MAPPINGS = {
     "SaveWavNode": SaveWavNode,
     "GetSubtitleByIndex": GetSubtitleByIndex,
     "MergeSubtitleAudio": MergeSubtitleAudio,
     "ListSavedAudioFiles": ListSavedAudioFiles,
-    "MergeSelectedAudioFiles": MergeSubtitleAudio,
-
+    "MergeSelectedAudioFiles": MergeSelectedAudioFiles,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -30,7 +32,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
 
 WEB_DIRECTORY = "./web"
 
-# Extend MergeSubtitleAudio node to include dropdown logic (monkey patching for simplicity)
 if hasattr(MergeSubtitleAudio, "INPUT_TYPES"):
     original_input_types = MergeSubtitleAudio.INPUT_TYPES
     def patched_input_types(cls):
