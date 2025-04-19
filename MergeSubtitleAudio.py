@@ -5,11 +5,11 @@ from pydub import AudioSegment
 class MergeSubtitleAudio:
     @classmethod
     def INPUT_TYPES(cls):
-        assets_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
-        srt_dir = os.path.join(assets_path, "srt_uploads")
+        assets_path = os.path.dirname(os.path.abspath(__file__))
+        srt_dir = os.path.join(assets_path, "assets", "srt_uploads")
         srt_files = [f for f in os.listdir(srt_dir) if f.endswith(".srt")]
         srt_files.sort()
-        dummy_dir_options = [assets_path]
+        dummy_dir_options = [os.path.join(assets_path, "assets")]
         return {
             "required": {
                 "srt_file": (srt_files,),
@@ -20,13 +20,13 @@ class MergeSubtitleAudio:
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("merged_file_path",)
     FUNCTION = "merge"
-    CATEGORY = "🎮 Subtitle Tools"
+    CATEGORY = "📺 Subtitle Tools"
 
-    def format_timestamp_for_filename(self, t):
+    def format_timestamp(self, t):
         t = t.replace(",", ".")
         h, m, s = t.split(":")
         s, ms = s.split(".")
-        return f"{int(h):02}_{int(m):02}_{int(s)}s{int(ms)}ms"
+        return f"{int(h):02}:{int(m):02}:{int(s)}.{int(ms):03}"
 
     def get_seconds(self, t):
         t = t.replace(",", ".")
@@ -80,13 +80,9 @@ class MergeSubtitleAudio:
             end_sec = self.get_seconds(end)
             target_ms = int((end_sec - start_sec) * 1000)
 
-            file_prefix = f"{self.format_timestamp_for_filename(start)}_to_{self.format_timestamp_for_filename(end)}"
-
+            prefix = start.replace(",", "_").replace(":", "_").replace(".", "s")
             try:
-                audio_file = next(
-                    f for f in os.listdir(audio_out_path)
-                    if f.startswith(file_prefix) and f.endswith(".wav")
-                )
+                audio_file = next(f for f in os.listdir(audio_out_path) if prefix in f)
                 seg = AudioSegment.from_file(os.path.join(audio_out_path, audio_file))
                 actual_ms = len(seg)
                 if actual_ms < target_ms:
@@ -101,3 +97,29 @@ class MergeSubtitleAudio:
 
         merged.export(merge_output_path, format="wav")
         return (merge_output_path,)
+
+
+class ListSavedAudioFiles:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {"required": {}}
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("file_list",)
+    FUNCTION = "list_files"
+    CATEGORY = "📁 Debug Tools"
+
+    def list_files(self):
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        audio_dir = os.path.join(base_path, "assets", "audio_out")
+
+        if not os.path.exists(audio_dir):
+            return ("[ERROR] audio_out directory not found",)
+
+        files = [f for f in os.listdir(audio_dir) if f.endswith(".wav")]
+        files.sort()
+
+        if not files:
+            return ("[DEBUG] No .wav files found in audio_out",)
+
+        return ("\n".join(files),)
