@@ -4,9 +4,10 @@ from .MergeSubtitleAudio import MergeSubtitleAudio
 
 import os
 
-# List all files in assets folder
+# List all SRT files and dummy folder
 ASSETS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
-SRT_FILES = [f for f in os.listdir(ASSETS_PATH) if f.endswith(".srt")]
+SRT_UPLOAD_PATH = os.path.join(ASSETS_PATH, "srt_uploads")
+SRT_FILES = [os.path.join(SRT_UPLOAD_PATH, f) for f in os.listdir(SRT_UPLOAD_PATH) if f.endswith(".srt")]
 DUMMY_DIR_OPTIONS = [ASSETS_PATH]
 
 NODE_CLASS_MAPPINGS = {
@@ -18,7 +19,7 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "SaveWavNode": "Save Wav from TTS",
     "GetSubtitleByIndex": "Get Subtitle By Index",
-    "MergeSubtitleAudio": "Merge Subtitle Audio-Testing-do-not-use",
+    "MergeSubtitleAudio": "Merge Subtitle Audio - do not use",
 }
 
 WEB_DIRECTORY = "./web"
