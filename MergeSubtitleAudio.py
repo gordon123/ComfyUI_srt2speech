@@ -1,6 +1,3 @@
-# 📦 Merge all subtitle audio wav files into a single audio file
-# 🔉 Includes silence based on subtitle gaps
-
 import os
 import re
 from pydub import AudioSegment
@@ -11,66 +8,86 @@ class MergeSubtitleAudio:
         return {
             "required": {
                 "srt_file": ("STRING", {"multiline": False}),
-                "sample_rate": ("INT", {"default": 24000, "min": 8000, "max": 48000, "step": 1000}),
-                "audio_folder": ("STRING", {"default": "assets/audio_out"}),
-                "output_name": ("STRING", {"default": "full_sub_audio.wav"})
+                "audio_dir": ("STRING", {"multiline": False, "default": "assets/audio_out"}),
+                "dummy_dir": ("STRING", {"multiline": False, "default": "assets"}),
+                "output_file": ("STRING", {"multiline": False, "default": "merged_output.wav"})
             }
         }
 
     RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("merged_audio_path",)
+    RETURN_NAMES = ("merged_path",)
     FUNCTION = "merge"
     CATEGORY = "📺 Subtitle Tools"
 
     def parse_srt(self, path):
-        with open(path, 'r', encoding='utf-8') as f:
-            content = f.read()
-
         entries = []
-        blocks = re.split(r'\n\s*\n', content.strip())
-        for block in blocks:
-            lines = block.strip().split('\n')
-            if len(lines) >= 2:
-                index = lines[0]
-                times = lines[1]
-                text = " ".join(lines[2:])
-                start, end = times.split(' --> ')
-                entries.append((start.strip(), end.strip(), text.strip()))
+        with open(path, 'r', encoding='utf-8') as f:
+            lines = f.read().split('\n')
+        i = 0
+        while i < len(lines):
+            if lines[i].strip().isdigit():
+                timestamp = lines[i + 1].strip()
+                entries.append(timestamp)
+                i += 2
+            else:
+                i += 1
         return entries
 
-    def to_millis(self, timestamp):
-        h, m, s = re.split('[:]', timestamp.replace(",", "."))
-        s, ms = s.split('.')
+    def timestamp_to_ms(self, timestamp):
+        t = timestamp.replace(",", ".")
+        h, m, s = t.split(":")
+        s, ms = s.split(".")
         return int(h) * 3600000 + int(m) * 60000 + int(s) * 1000 + int(ms)
 
-    def merge(self, srt_file, sample_rate, audio_folder, output_name):
+    def extract_wav_by_time(self, filename):
+        match = re.match(r"(\d+_\d+s\d+ms)_to_(\d+_\d+s\d+ms)__.*", filename)
+        if not match:
+            return None, None
+        start = match.group(1).replace("s", ":").replace("ms", ",").replace("_", ":")
+        return start, filename
+
+    def merge(self, srt_file, audio_dir, dummy_dir, output_file):
         base_path = os.path.dirname(os.path.abspath(__file__))
-        folder = os.path.join(base_path, audio_folder)
         srt_path = os.path.join(base_path, srt_file)
-        output_path = os.path.join(base_path, "assets", "merge_audio", output_name)
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        audio_dir = os.path.join(base_path, audio_dir)
+        dummy_dir = os.path.join(base_path, dummy_dir)
+        output_path = os.path.join(base_path, dummy_dir, output_file)
 
-        entries = self.parse_srt(srt_path)
-        merged = AudioSegment.silent(duration=0, frame_rate=sample_rate)
+        dummy_24khz = AudioSegment.from_file(os.path.join(dummy_dir, "dummy24khz.wav"))
 
-        for start, end, _ in entries:
-            filename_pattern = f"{self.format_filename(start)}_to_{self.format_filename(end)}"
-            file = next((f for f in os.listdir(folder) if filename_pattern in f), None)
-            start_ms = self.to_millis(start)
-            if file:
-                audio = AudioSegment.from_file(os.path.join(folder, file))
-                silence_needed = start_ms - len(merged)
-                if silence_needed > 0:
-                    merged += AudioSegment.silent(duration=silence_needed, frame_rate=sample_rate)
-                merged += audio
+        audio_files = sorted([f for f in os.listdir(audio_dir) if f.endswith(".wav")])
+        timestamps = self.parse_srt(srt_path)
+
+        merged = AudioSegment.silent(duration=0)
+
+        for i, timestamp in enumerate(timestamps):
+            start_ts, end_ts = timestamp.split(" --> ")
+            start_ms = self.timestamp_to_ms(start_ts)
+            end_ms = self.timestamp_to_ms(end_ts)
+            duration_ms = end_ms - start_ms
+
+            found = None
+            for fname in audio_files:
+                if fname.startswith(self.format_timestamp(start_ts)):
+                    found = fname
+                    break
+
+            if found:
+                clip = AudioSegment.from_file(os.path.join(audio_dir, found))
+                if len(clip) > duration_ms:
+                    clip = clip[:duration_ms]
+                elif len(clip) < duration_ms:
+                    pad = dummy_24khz[:duration_ms - len(clip)]
+                    clip += pad
+                merged += clip
             else:
-                print(f"[WARN] No audio for subtitle: {start} -> {end}")
+                merged += dummy_24khz[:duration_ms]
 
         merged.export(output_path, format="wav")
         return (output_path,)
 
-    def format_filename(self, timestamp):
-        timestamp = timestamp.replace(",", ".")
-        h, m, s = timestamp.split(":")
+    def format_timestamp(self, t):
+        t = t.replace(",", ".")
+        h, m, s = t.split(":")
         s, ms = s.split(".")
         return f"{int(h):02}_{int(m):02}_{int(s)}s{int(ms)}ms"
