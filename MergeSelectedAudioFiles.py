@@ -1,9 +1,9 @@
 import os
-import re
-from pydub import AudioSegment
 import inspect
+from ..utils.shared_types import any_typ  # สมมติว่ามี shared type
+import folder_paths  # หรือวิธีอื่นในการ resolve path
 
-class MergeSelectedAudioFiles:
+class SelectMultipleAudioFiles:
     @classmethod
     def INPUT_TYPES(cls):
         base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "audio_out")
@@ -11,10 +11,10 @@ class MergeSelectedAudioFiles:
         audio_files.sort()
 
         dyn_inputs = {
-            "file1": (audio_files, {"tooltip": "Select first audio file to merge"})
+            "file1": (audio_files, {"tooltip": "Select first audio file"})
         }
 
-        # dynamic UI rendering support in ComfyUI
+        # Dynamic: ถ้ากำลังสร้าง input info
         if inspect.stack()[2].function == "get_input_info":
             class AllInputs:
                 def __contains__(self, key):
@@ -32,35 +32,14 @@ class MergeSelectedAudioFiles:
             }
         }
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("merged_path",)
-    FUNCTION = "merge"
-    CATEGORY = "📁 File Tools"
+    RETURN_TYPES = ("LIST",)
+    RETURN_NAMES = ("selected_files",)
+    FUNCTION = "get_files"
+    CATEGORY = "📺 Subtitle Tools / 📁 File Tools"
 
-    def merge(self, **kwargs):
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        audio_path = os.path.join(base_path, "assets", "audio_out")
-        output_path = os.path.join(base_path, "assets", "merged_selected.wav")
-
-        # Collect selected files
-        selected_files = [v for k, v in sorted(kwargs.items()) if k.startswith("file") and isinstance(v, str)]
-        segments = []
-        for fname in selected_files:
-            fpath = os.path.join(audio_path, fname)
-            if os.path.exists(fpath):
-                try:
-                    seg = AudioSegment.from_file(fpath)
-                    segments.append(seg)
-                except Exception as e:
-                    print(f"[ERROR] Failed to load: {fname} → {e}")
-
-        if segments:
-            merged = segments[0]
-            for s in segments[1:]:
-                merged += s
-            merged.export(output_path, format="wav")
-            print(f"[INFO] Exported merged WAV: {output_path}")
-        else:
-            output_path = "No valid audio files to merge."
-
-        return (output_path,)
+    def get_files(self, **kwargs):
+        file_list = []
+        for k, v in kwargs.items():
+            if k.startswith("file") and isinstance(v, str):
+                file_list.append(v)
+        return (file_list,)

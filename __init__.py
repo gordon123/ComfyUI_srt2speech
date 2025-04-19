@@ -1,6 +1,7 @@
 from .SaveWavNode import SaveWavNode
 from .GetSubtitleByIndex import GetSubtitleByIndex
 from .MergeSubtitleAudio import MergeSubtitleAudio, ListSavedAudioFiles
+from .MergeSelectedAudioFiles import MergeSelectedAudioFiles
 
 import os
 
@@ -15,6 +16,7 @@ NODE_CLASS_MAPPINGS = {
     "GetSubtitleByIndex": GetSubtitleByIndex,
     "MergeSubtitleAudio": MergeSubtitleAudio,
     "ListSavedAudioFiles": ListSavedAudioFiles,
+    "MergeSelectedAudioFiles": MergeSubtitleAudio,
 
 }
 
@@ -23,6 +25,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "GetSubtitleByIndex": "Get Subtitle By Index",
     "MergeSubtitleAudio": "Merge Subtitle Audio - do not use",
     "ListSavedAudioFiles": "List Saved Audio Files - do not use",
+    "MergeSelectedAudioFiles": "Merge Selected Audio Files",
 }
 
 WEB_DIRECTORY = "./web"
