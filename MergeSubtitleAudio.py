@@ -20,7 +20,7 @@ class MergeSubtitleAudio:
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("merged_file_path",)
     FUNCTION = "merge"
-    CATEGORY = "📺 Subtitle Tools"
+    CATEGORY = "🎮 Subtitle Tools"
 
     def format_timestamp(self, t):
         t = t.replace(",", ".")
@@ -80,19 +80,23 @@ class MergeSubtitleAudio:
             end_sec = self.get_seconds(end)
             target_ms = int((end_sec - start_sec) * 1000)
 
-            file_prefix = f"{start.replace(':', '_').replace('.', 's')}"
-            try:
-                audio_file = next(f for f in os.listdir(audio_out_path) if file_prefix in f)
-                seg = AudioSegment.from_file(os.path.join(audio_out_path, audio_file))
+            pattern = f"{start.replace(':', '_').replace('.', 's')}"
+            matching_file = next((f for f in os.listdir(audio_out_path) if f.startswith(pattern)), None)
+
+            if matching_file:
+                print(f"[DEBUG] Found audio: {matching_file}")
+                seg = AudioSegment.from_file(os.path.join(audio_out_path, matching_file))
                 actual_ms = len(seg)
                 if actual_ms < target_ms:
+                    print(f"[DEBUG] Padding {target_ms - actual_ms}ms")
                     padding = dummy_24khz[:target_ms - actual_ms]
                     seg += padding
                 elif actual_ms > target_ms:
+                    print(f"[DEBUG] Trimming {actual_ms - target_ms}ms")
                     seg = seg[:target_ms]
                 merged += seg
-            except StopIteration:
-                # fallback: if no file matches, insert silence
+            else:
+                print(f"[DEBUG] No match for {start} → using dummy")
                 merged += dummy_24khz[:target_ms]
 
         merged.export(merge_output_path, format="wav")
