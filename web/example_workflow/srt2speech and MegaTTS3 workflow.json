@@ -1,0 +1,683 @@
+{
+  "id": "15e57cde-ada6-4d8e-84f5-e644bb51bb21",
+  "revision": 0,
+  "last_node_id": 19,
+  "last_link_id": 12,
+  "nodes": [
+    {
+      "id": 3,
+      "type": "MegaTTS_VoiceMaker",
+      "pos": [
+        -203.93145751953125,
+        476.33709716796875
+      ],
+      "size": [
+        400,
+        204
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio_in",
+          "type": "AUDIO",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio_out",
+          "type": "AUDIO",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "voice_path",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-megatts",
+        "ver": "1.0.2",
+        "Node name for S&R": "MegaTTS_VoiceMaker"
+      },
+      "widgets_values": [
+        "my_voice",
+        "",
+        true,
+        true,
+        10
+      ]
+    },
+    {
+      "id": 5,
+      "type": "PreviewAudio",
+      "pos": [
+        239.28021240234375,
+        475.5037536621094
+      ],
+      "size": [
+        315,
+        88
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 2
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.29",
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 4,
+      "type": "LoadAudio",
+      "pos": [
+        -570.5040283203125,
+        479.3815002441406
+      ],
+      "size": [
+        315,
+        136
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.29",
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "mono.wav",
+        null,
+        ""
+      ]
+    },
+    {
+      "id": 11,
+      "type": "GetSubtitleByIndex",
+      "pos": [
+        -185.80003356933594,
+        746.4882202148438
+      ],
+      "size": [
+        315,
+        162
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "index",
+          "type": "INT",
+          "widget": {
+            "name": "index"
+          },
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "subtitle_text",
+          "type": "STRING",
+          "links": [
+            4,
+            10
+          ]
+        },
+        {
+          "name": "timestamp",
+          "type": "STRING",
+          "links": [
+            7
+          ]
+        },
+        {
+          "name": "all_subtitles",
+          "type": "STRING",
+          "links": [
+            11
+          ]
+        },
+        {
+          "name": "all_timestamps",
+          "type": "STRING",
+          "links": [
+            12
+          ]
+        },
+        {
+          "name": "srt_file",
+          "type": "STRING",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "gordon123/ComfyUI_srt2speech",
+        "ver": "480e2d5e73783f6896b78a9ed4f98b07dd77eee4",
+        "Node name for S&R": "GetSubtitleByIndex"
+      },
+      "widgets_values": [
+        "test-5min.srt",
+        1
+      ]
+    },
+    {
+      "id": 10,
+      "type": "SaveWavNode",
+      "pos": [
+        1037.654052734375,
+        740.66650390625
+      ],
+      "size": [
+        315,
+        122
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 5
+        },
+        {
+          "name": "timestamp",
+          "type": "STRING",
+          "widget": {
+            "name": "timestamp"
+          },
+          "link": 7
+        },
+        {
+          "name": "srt_file",
+          "type": "STRING",
+          "widget": {
+            "name": "srt_file"
+          },
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "saved_path",
+          "type": "STRING",
+          "links": [
+            9
+          ]
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            8
+          ]
+        },
+        {
+          "name": "duration_sec",
+          "type": "FLOAT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "aux_id": "gordon123/ComfyUI_srt2speech",
+        "ver": "480e2d5e73783f6896b78a9ed4f98b07dd77eee4",
+        "Node name for S&R": "SaveWavNode"
+      },
+      "widgets_values": [
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 15,
+      "type": "Display Any (rgthree)",
+      "pos": [
+        234.4233856201172,
+        985.4705200195312
+      ],
+      "size": [
+        802.6571655273438,
+        177.29931640625
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 11
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "1.0.0",
+        "Node name for S&R": "Display Any (rgthree)"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 13,
+      "type": "Display Any (rgthree)",
+      "pos": [
+        167.97984313964844,
+        746.6775512695312
+      ],
+      "size": [
+        399.81591796875,
+        150.6569366455078
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 10
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "1.0.0",
+        "Node name for S&R": "Display Any (rgthree)"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 14,
+      "type": "Display Any (rgthree)",
+      "pos": [
+        -200.09425354003906,
+        982.1824340820312
+      ],
+      "size": [
+        421.4608154296875,
+        192.89865112304688
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 12
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "1.0.0",
+        "Node name for S&R": "Display Any (rgthree)"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 7,
+      "type": "MegaTTS3",
+      "pos": [
+        582.9607543945312,
+        484.6341552734375
+      ],
+      "size": [
+        481.1999816894531,
+        208
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "generated_audio",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-megatts",
+        "ver": "1.0.2",
+        "Node name for S&R": "MegaTTS3"
+      },
+      "widgets_values": [
+        "",
+        "en",
+        32,
+        1.4,
+        3,
+        null
+      ]
+    },
+    {
+      "id": 8,
+      "type": "MegaTTS3S",
+      "pos": [
+        587.7322387695312,
+        742.2841796875
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "input_text",
+          "type": "STRING",
+          "widget": {
+            "name": "input_text"
+          },
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "generated_audio",
+          "type": "AUDIO",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-megatts",
+        "ver": "1.0.2",
+        "Node name for S&R": "MegaTTS3S"
+      },
+      "widgets_values": [
+        "",
+        "en",
+        "bbc_news.wav"
+      ]
+    },
+    {
+      "id": 17,
+      "type": "Display Any (rgthree)",
+      "pos": [
+        1390.2310791015625,
+        735.1076049804688
+      ],
+      "size": [
+        537.5999755859375,
+        88
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 9
+        }
+      ],
+      "outputs": [],
+      "title": "Display Any (rgthree) you can find the saved file in this folder",
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "1.0.0",
+        "Node name for S&R": "Display Any (rgthree)"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 19,
+      "type": "MarkdownNote",
+      "pos": [
+        -693.1226196289062,
+        901.5540161132812
+      ],
+      "size": [
+        479.47906494140625,
+        338.64007568359375
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "If you use ComfyUI-MegaTTS same as mine, you can follow instruction here, otherwise other TTS should also work.\n\n1. install MegaTTS of AIlab via Custom manager\n2. go to ComfyUI-MegaTTS  and run \n\n```\npip install -r requirements.txt\n```\n\n3. If you use local computer, check if you have ffmpeg, for me I use Runpod GPU cloud, linux system run this command\n\n```   \napt update && apt install -y ffmpeg\n```\n\nReseart Comfyui server, reload webui page\n\n4. Go to my [ComfyUI_srt2speech](https://github.com/gordon123/ComfyUI_srt2speech/tree/main/assets/wav-npy) download any models of .wav and .npy both same name. and use wav file upload into voice maker click Run\n\n5. Run MegaTTS voice maker once. It will download  some models in this folder models/TTS/MegaTTS3\n\n6. Restart ComfyUi, refresh webui\n7. Upload all *.wav and *.npy into the ComfyUI-MegaTTS/voices/ folder (small voices)\n8. Refresh webui and now you can use reference_voice in the MegaTTS3"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 12,
+      "type": "PrimitiveNode",
+      "pos": [
+        -632.6508178710938,
+        755.29345703125
+      ],
+      "size": [
+        428.3999938964844,
+        82
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "widget": {
+            "name": "index"
+          },
+          "links": [
+            3
+          ]
+        }
+      ],
+      "title": "Primitive - Start first line of the subtitle with 0",
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        1,
+        "increment"
+      ]
+    },
+    {
+      "id": 18,
+      "type": "SaveAudio",
+      "pos": [
+        1406.587646484375,
+        878.6835327148438
+      ],
+      "size": [
+        445.20001220703125,
+        126.41787719726562
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 8
+        }
+      ],
+      "outputs": [],
+      "title": "SaveAudio this save will be in Comfyui  normal output",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.29",
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "srt2speech"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      4,
+      0,
+      3,
+      0,
+      "AUDIO"
+    ],
+    [
+      2,
+      3,
+      0,
+      5,
+      0,
+      "AUDIO"
+    ],
+    [
+      3,
+      12,
+      0,
+      11,
+      0,
+      "INT"
+    ],
+    [
+      4,
+      11,
+      0,
+      8,
+      0,
+      "STRING"
+    ],
+    [
+      5,
+      8,
+      0,
+      10,
+      0,
+      "AUDIO"
+    ],
+    [
+      6,
+      11,
+      4,
+      10,
+      2,
+      "STRING"
+    ],
+    [
+      7,
+      11,
+      1,
+      10,
+      1,
+      "STRING"
+    ],
+    [
+      8,
+      10,
+      1,
+      18,
+      0,
+      "AUDIO"
+    ],
+    [
+      9,
+      10,
+      0,
+      17,
+      0,
+      "*"
+    ],
+    [
+      10,
+      11,
+      0,
+      13,
+      0,
+      "*"
+    ],
+    [
+      11,
+      11,
+      2,
+      15,
+      0,
+      "*"
+    ],
+    [
+      12,
+      11,
+      3,
+      14,
+      0,
+      "*"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Run onece first time / use any .wav file from my repo asset folder to download TTS medel",
+      "bounding": [
+        -580.5040283203125,
+        401.90374755859375,
+        1144.7843017578125,
+        288.433349609375
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1,
+      "offset": [
+        790.703776288701,
+        -489.76057338314325
+      ]
+    },
+    "frontendVersion": "1.16.9"
+  },
+  "version": 0.4
+}
