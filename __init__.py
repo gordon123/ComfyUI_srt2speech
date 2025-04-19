@@ -25,7 +25,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "GetSubtitleByIndex": "Get Subtitle By Index",
     "MergeSubtitleAudio": "Merge Subtitle Audio - do not use",
     "ListSavedAudioFiles": "List Saved Audio Files - do not use",
-    "MergeSelectedAudioFiles": "Merge Selected Audio Files",
+    "MergeSelectedAudioFiles": "Merge Selected Audio Files - do not use",
 }
 
 WEB_DIRECTORY = "./web"
