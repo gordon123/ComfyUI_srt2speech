@@ -9,18 +9,16 @@ class MergeSubtitleAudio:
         srt_dir = os.path.join(assets_path, "assets", "srt_uploads")
         srt_files = [f for f in os.listdir(srt_dir) if f.endswith(".srt")]
         srt_files.sort()
-        dummy_dir_options = [os.path.join(assets_path, "assets")]
         return {
             "required": {
-                "srt_file": (srt_files,),
-                "dummy_dir": (dummy_dir_options,)
+                "srt_file": (srt_files,)
             }
         }
 
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("merged_file_path",)
     FUNCTION = "merge"
-    CATEGORY = "📺 Subtitle Tools"
+    CATEGORY = "🎮 Subtitle Tools"
 
     def format_timestamp(self, t):
         t = t.replace(",", ".")
@@ -53,7 +51,7 @@ class MergeSubtitleAudio:
             entries.append(entry)
         return entries
 
-    def merge(self, srt_file, dummy_dir):
+    def merge(self, srt_file):
         base_path = os.path.dirname(os.path.abspath(__file__))
         audio_out_path = os.path.join(base_path, "assets", "audio_out")
         merge_output_path = os.path.join(base_path, "assets", "merged_all.wav")
@@ -62,9 +60,6 @@ class MergeSubtitleAudio:
         entries = self.parse_srt(srt_path)
 
         merged = AudioSegment.silent(duration=0)
-
-        dummy_16khz = AudioSegment.from_file(os.path.join(dummy_dir, "dummy16khz.wav"))
-        dummy_24khz = AudioSegment.from_file(os.path.join(dummy_dir, "dummy24khz.wav"))
 
         for entry in entries:
             timestamp = entry.get("timestamp", "")
@@ -75,25 +70,15 @@ class MergeSubtitleAudio:
             if not match:
                 continue
 
-            start, end = match.group(1), match.group(2)
-            start_sec = self.get_seconds(start)
-            end_sec = self.get_seconds(end)
-            target_ms = int((end_sec - start_sec) * 1000)
+            start = match.group(1)
+            prefix = self.format_timestamp(start).replace(":", "_").replace(".", "s")
 
-            prefix = start.replace(",", "_").replace(":", "_").replace(".", "s")
             try:
                 audio_file = next(f for f in os.listdir(audio_out_path) if f.startswith(prefix))
                 seg = AudioSegment.from_file(os.path.join(audio_out_path, audio_file))
-                actual_ms = len(seg)
-                if actual_ms < target_ms:
-                    padding = dummy_24khz[:target_ms - actual_ms]
-                    seg += padding
-                elif actual_ms > target_ms:
-                    seg = seg[:target_ms]
                 merged += seg
             except StopIteration:
-                print(f"[DEBUG] No match for {start} → using dummy")
-                merged += dummy_24khz[:target_ms]
+                print(f"[DEBUG] No match for {start} → skipped")
 
         merged.export(merge_output_path, format="wav")
         return (merge_output_path,)
