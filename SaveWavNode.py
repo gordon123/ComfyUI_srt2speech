@@ -21,13 +21,13 @@ class SaveWavNode:
     RETURN_TYPES = ("STRING", "AUDIO", "FLOAT",)
     RETURN_NAMES = ("saved_path", "audio", "duration_sec",)
     FUNCTION = "save_wav"
-    CATEGORY = "📺 Subtitle Tools"
+    CATEGORY = "🎮 Subtitle Tools"
 
     def format_timestamp(self, t):
         t = t.replace(",", ".")
         h, m, s = t.split(":")
         s, ms = s.split(".")
-        return f"{int(h):02}_{int(m):02}_{int(s)}s{int(ms)}ms"
+        return f"{int(h):02}_{int(m):02}_{int(s):02}s{int(ms):03}ms"
 
     def save_wav(self, audio, timestamp, srt_file):
         base_path = os.path.dirname(os.path.abspath(__file__))
