@@ -1,7 +1,5 @@
 import os
-import re
 from pydub import AudioSegment
-import inspect
 
 class MergeSelectedAudioFiles:
     @classmethod
@@ -10,27 +8,13 @@ class MergeSelectedAudioFiles:
         audio_files = [f for f in os.listdir(base_path) if f.endswith(".wav")]
         audio_files.sort()
 
-        # default single input to start
-        dyn_inputs = {
-            "file1": (audio_files, {"tooltip": "Select first audio file to merge"})
-        }
-
-        # if UI is querying inputs, allow flexible dynamic slots
-        stack = inspect.stack()
-        if len(stack) > 2 and stack[2].function == "get_input_info":
-            class AllInputs:
-                def __contains__(self, key):
-                    return key.startswith("file")
-
-                def __getitem__(self, key):
-                    return (audio_files, {"tooltip": f"Select audio file {key}"})
-
-            dyn_inputs = AllInputs()
-
         return {
-            "required": dyn_inputs,
-            "hidden": {
-                "unique_id": "UNIQUE_ID"
+            "required": {
+                "file1": (audio_files,),
+                "file2": (audio_files,),
+                "file3": (audio_files,),
+                "file4": (audio_files,),
+                "file5": (audio_files,),
             }
         }
 
@@ -39,15 +23,16 @@ class MergeSelectedAudioFiles:
     FUNCTION = "merge"
     CATEGORY = "📁 File Tools"
 
-    def merge(self, **kwargs):
+    def merge(self, file1, file2, file3, file4, file5):
         base_path = os.path.dirname(os.path.abspath(__file__))
         audio_path = os.path.join(base_path, "assets", "audio_out")
         output_path = os.path.join(base_path, "assets", "merged_selected.wav")
 
-        # Collect selected files
-        selected_files = [v for k, v in sorted(kwargs.items()) if k.startswith("file") and isinstance(v, str)]
+        files = [file1, file2, file3, file4, file5]
         segments = []
-        for fname in selected_files:
+        for fname in files:
+            if not fname:
+                continue
             fpath = os.path.join(audio_path, fname)
             if os.path.exists(fpath):
                 try:
