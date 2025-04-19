@@ -22,12 +22,6 @@ class MergeSubtitleAudio:
     FUNCTION = "merge"
     CATEGORY = "🎮 Subtitle Tools"
 
-    def format_timestamp(self, t):
-        t = t.replace(",", ".")
-        h, m, s = t.split(":")
-        s, ms = s.split(".")
-        return f"{int(h):02}:{int(m):02}:{int(s)}.{int(ms):03}"
-
     def format_timestamp_for_filename(self, t):
         t = t.replace(",", ".")
         h, m, s = t.split(":")
@@ -86,9 +80,13 @@ class MergeSubtitleAudio:
             end_sec = self.get_seconds(end)
             target_ms = int((end_sec - start_sec) * 1000)
 
-            file_prefix = self.format_timestamp_for_filename(start)
+            file_prefix = f"{self.format_timestamp_for_filename(start)}_to_{self.format_timestamp_for_filename(end)}"
+
             try:
-                audio_file = next(f for f in os.listdir(audio_out_path) if file_prefix in f)
+                audio_file = next(
+                    f for f in os.listdir(audio_out_path)
+                    if f.startswith(file_prefix) and f.endswith(".wav")
+                )
                 seg = AudioSegment.from_file(os.path.join(audio_out_path, audio_file))
                 actual_ms = len(seg)
                 if actual_ms < target_ms:
