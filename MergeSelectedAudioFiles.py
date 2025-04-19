@@ -1,7 +1,7 @@
 import os
 import re
 from pydub import AudioSegment
-from nodes import core  # ✅ Import core to support dynamic UI
+import inspect
 
 class MergeSelectedAudioFiles:
     @classmethod
@@ -10,15 +10,21 @@ class MergeSelectedAudioFiles:
         audio_files = [f for f in os.listdir(base_path) if f.endswith(".wav")]
         audio_files.sort()
 
+        # default single input to start
         dyn_inputs = {
             "file1": (audio_files, {"tooltip": "Select first audio file to merge"})
         }
 
-        # ✅ Enable dynamic dropdowns when ComfyUI supports it
-        if core.is_execution_model_version_supported():
+        # if UI is querying inputs, allow flexible dynamic slots
+        stack = inspect.stack()
+        if len(stack) > 2 and stack[2].function == "get_input_info":
             class AllInputs:
-                def __contains__(self, key): return True
-                def __getitem__(self, key): return (audio_files, {"tooltip": f"Select audio file {key}"})
+                def __contains__(self, key):
+                    return key.startswith("file")
+
+                def __getitem__(self, key):
+                    return (audio_files, {"tooltip": f"Select audio file {key}"})
+
             dyn_inputs = AllInputs()
 
         return {
@@ -31,7 +37,7 @@ class MergeSelectedAudioFiles:
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("merged_path",)
     FUNCTION = "merge"
-    CATEGORY = "\ud83d\udcc1 File Tools"
+    CATEGORY = "📁 File Tools"
 
     def merge(self, **kwargs):
         base_path = os.path.dirname(os.path.abspath(__file__))
