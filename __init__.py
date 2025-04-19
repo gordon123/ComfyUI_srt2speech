@@ -18,7 +18,7 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "SaveWavNode": "Save Wav from TTS",
     "GetSubtitleByIndex": "Get Subtitle By Index",
-    "MergeSubtitleAudio": "Merge Subtitle Audio",
+    "MergeSubtitleAudio": "Merge Subtitle Audio-Testing-do-not-use",
 }
 
 WEB_DIRECTORY = "./web"
