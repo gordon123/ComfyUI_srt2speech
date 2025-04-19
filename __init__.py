@@ -1,5 +1,6 @@
 from .SaveWavNode import SaveWavNode
 from .GetSubtitleByIndex import GetSubtitleByIndex
+from .MergeSubtitleAudio import MergeSubtitleAudio
 # from .MergeWithDummySilence import MergeWithDummySilence
 # from .MergeSavedWavWithDummy import MergeSavedWavWithDummy
 # from .LoadMergedAudio import LoadMergedAudio
@@ -8,6 +9,7 @@ from .GetSubtitleByIndex import GetSubtitleByIndex
 NODE_CLASS_MAPPINGS = {
     "SaveWavNode": SaveWavNode,
     "GetSubtitleByIndex": GetSubtitleByIndex,
+    "MergeSubtitleAudio": MergeSubtitleAudio,
 #    "MergeWithDummySilence": MergeWithDummySilence,
 #    "MergeSavedWavWithDummy": MergeSavedWavWithDummy,
 #    "LoadMergedAudio": LoadMergedAudio,
@@ -17,6 +19,7 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "SaveWavNode": "Save Wav from TTS",
     "GetSubtitleByIndex": "Get Subtitle By Index",
+    "MergeSubtitleAudio": "Merge Subtitle Audio",
  #   "MergeWithDummySilence": "Merge with Dummy Silence",
  #   "MergeSavedWavWithDummy": "Merge Saved Wav with Dummy",
  #   "LoadMergedAudio": "Load Merged Audio",
