@@ -70,15 +70,16 @@ class MergeSubtitleAudio:
             if not match:
                 continue
 
-            start = match.group(1)
-            prefix = self.format_timestamp(start).replace(":", "_").replace(".", "s")
+            start, _ = match.group(1), match.group(2)
+            start_sec = self.get_seconds(start)
 
+            prefix = start.replace(",", "_").replace(":", "_").replace(".", "s")
             try:
                 audio_file = next(f for f in os.listdir(audio_out_path) if f.startswith(prefix))
                 seg = AudioSegment.from_file(os.path.join(audio_out_path, audio_file))
                 merged += seg
             except StopIteration:
-                print(f"[DEBUG] No match for {start} → skipped")
+                print(f"[DEBUG] No match for {start} → skipping")
 
         merged.export(merge_output_path, format="wav")
         return (merge_output_path,)
