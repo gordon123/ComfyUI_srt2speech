@@ -21,7 +21,7 @@ class SaveWavNode:
     RETURN_TYPES = ("STRING", "AUDIO", "FLOAT",)
     RETURN_NAMES = ("saved_path", "audio", "duration_sec",)
     FUNCTION = "save_wav"
-    CATEGORY = "🎮 Subtitle Tools"
+    CATEGORY = "📺 Subtitle Tools"
 
     def format_timestamp(self, t):
         t = t.replace(",", ".")
