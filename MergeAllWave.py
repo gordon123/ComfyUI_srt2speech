@@ -25,7 +25,7 @@ class MergeAllWave:
         t = t.replace(",", ".")
         h, m, s = t.split(":")
         s, ms = s.split(".")
-        return f"{int(h):02}_{int(m):02}_{int(s):02}s{int(ms)}ms"
+        return f"{int(h):02}_{int(m):02}_{int(s):02}s{int(ms):03}ms"
 
     def get_seconds(self, t):
         t = t.replace(",", ".")
@@ -79,7 +79,6 @@ class MergeAllWave:
                 seg = AudioSegment.from_file(os.path.join(audio_out_path, audio_file))
                 merged += seg
             except StopIteration:
-                # Comment out the line below if you don't want debug messages
                 print(f"[DEBUG] No match for {start} (prefix: {prefix}) → skipping")
 
         merged.export(merge_output_path, format="wav")
