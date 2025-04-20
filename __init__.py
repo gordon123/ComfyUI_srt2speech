@@ -1,7 +1,6 @@
 from .SaveWavNode import SaveWavNode
 from .GetSubtitleByIndex import GetSubtitleByIndex
-from .MergeAllWave import MergeAllWave
-from .ListSavedAudioFiles import ListSavedAudioFiles  # ถ้าแยกไฟล์
+from .MergeAllWave import MergeAllWave  # ✅ รวมทั้ง Merge และ ListAudioFiles แล้ว
 
 import os
 
@@ -16,15 +15,13 @@ if os.path.exists(SRT_UPLOAD_PATH):
 NODE_CLASS_MAPPINGS = {
     "SaveWavNode": SaveWavNode,
     "GetSubtitleByIndex": GetSubtitleByIndex,
-    "MergeAllWave": MergeAllWave,
-    "ListSavedAudioFiles": ListSavedAudioFiles,
+    "MergeAllWave": MergeAllWave,  # ✅ ตัวเดียวรวม 2 ฟังก์ชัน
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "SaveWavNode": "Save Wav from TTS",
     "GetSubtitleByIndex": "Get Subtitle By Index",
-    "MergeAllWave": "Merge All Wave",
-    "ListSavedAudioFiles": "List Saved Audio Files - do not use",
+    "MergeAllWave": "Merge All Wave",  # ✅ ชื่อเดียว
 }
 
 WEB_DIRECTORY = "./web"
