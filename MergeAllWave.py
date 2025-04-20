@@ -5,9 +5,14 @@ from pydub import AudioSegment
 class MergeAllWave:
     @classmethod
     def INPUT_TYPES(cls):
+        # ค้นหาไฟล์ .srt ในโฟลเดอร์ assets/srt_uploads
+        assets_path = os.path.dirname(os.path.abspath(__file__))
+        srt_dir = os.path.join(assets_path, "assets", "srt_uploads")
+        srt_files = [f for f in os.listdir(srt_dir) if f.endswith(".srt")]
+        srt_files.sort()
         return {
             "required": {
-                "srt_file": ("STRING", {"multiline": False, "default": ""})
+                "srt_file": (srt_files,)  # ✅ ใช้ dropdown list
             }
         }
 
@@ -17,6 +22,7 @@ class MergeAllWave:
     CATEGORY = "📺 Subtitle Tools"
 
     def format_prefix(self, t):
+        """Convert timestamp to match file prefix: 00_00_01s300ms"""
         t = t.replace(",", ".")
         h, m, s = t.split(":")
         s, ms = s.split(".")
