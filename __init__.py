@@ -19,9 +19,9 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "SaveWavNode": "Save Wav from TTS",
-    "GetSubtitleByIndex": "Get Subtitle By Index",
-    "MergeAllWave": "Merge All Wav - do not use it yet",  # ✅ ชื่อเดียว
+    "SaveWavNode": "💾 Save Wav from TTS",
+    "GetSubtitleByIndex": "✍️ Get Subtitle By Index",
+    "MergeAllWave": "💿 Merge All Wav",  # ✅ ชื่อเดียว
 }
 
 WEB_DIRECTORY = "./web"
