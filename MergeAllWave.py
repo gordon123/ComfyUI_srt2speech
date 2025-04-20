@@ -21,11 +21,11 @@ class MergeAllWave:
     CATEGORY = "📺 Subtitle Tools"
 
     def format_prefix(self, t):
-        """Convert timestamp to match file prefix: 00_00_1s300ms"""
+        """Convert timestamp to match file prefix: 00_00_01s300ms"""
         t = t.replace(",", ".")
         h, m, s = t.split(":")
         s, ms = s.split(".")
-        return f"{int(h):02}_{int(m):02}_{int(s)}s{int(ms)}ms"
+        return f"{int(h):02}_{int(m):02}_{int(s):02}s{int(ms):03}ms"
 
     def get_seconds(self, t):
         t = t.replace(",", ".")
@@ -71,7 +71,7 @@ class MergeAllWave:
                 continue
 
             start, _ = match.group(1), match.group(2)
-            prefix = self.format_prefix(start)  # ✅ ตรงกับชื่อไฟล์ใน audio_out
+            prefix = self.format_prefix(start)
 
             try:
                 audio_file = next(f for f in os.listdir(audio_out_path) if f.startswith(prefix))
