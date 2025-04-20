@@ -58,7 +58,6 @@ class MergeAllWave:
         srt_path = os.path.join(base_path, "assets", "srt_uploads", srt_file)
 
         entries = self.parse_srt(srt_path)
-
         merged = AudioSegment.silent(duration=0)
 
         for entry in entries:
@@ -81,3 +80,30 @@ class MergeAllWave:
 
         merged.export(merge_output_path, format="wav")
         return (merge_output_path,)
+
+
+# Optional utility (ยังใช้ได้ใน workflow)
+class ListSavedAudioFiles:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {"required": {}}
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("file_list",)
+    FUNCTION = "list_files"
+    CATEGORY = "📁 Debug Tools"
+
+    def list_files(self):
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        audio_dir = os.path.join(base_path, "assets", "audio_out")
+
+        if not os.path.exists(audio_dir):
+            return ("[ERROR] audio_out directory not found",)
+
+        files = [f for f in os.listdir(audio_dir) if f.endswith(".wav")]
+        files.sort()
+
+        if not files:
+            return ("[DEBUG] No .wav files found in audio_out",)
+
+        return ("\n".join(files),)

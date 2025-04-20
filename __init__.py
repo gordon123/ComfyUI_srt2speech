@@ -1,7 +1,7 @@
 from .SaveWavNode import SaveWavNode
 from .GetSubtitleByIndex import GetSubtitleByIndex
-from .MergeAllWave import MergeAllWave  # ✅ ใช้ตัวใหม่แทน
-
+from .MergeAllWave import MergeAllWave
+from .ListSavedAudioFiles import ListSavedAudioFiles  # ถ้าแยกไฟล์
 
 import os
 
@@ -17,14 +17,14 @@ NODE_CLASS_MAPPINGS = {
     "SaveWavNode": SaveWavNode,
     "GetSubtitleByIndex": GetSubtitleByIndex,
     "MergeAllWave": MergeAllWave,
-
+    "ListSavedAudioFiles": ListSavedAudioFiles,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "SaveWavNode": "Save Wav from TTS",
     "GetSubtitleByIndex": "Get Subtitle By Index",
     "MergeAllWave": "Merge All Wave",
-
+    "ListSavedAudioFiles": "List Saved Audio Files - do not use",
 }
 
 WEB_DIRECTORY = "./web"
