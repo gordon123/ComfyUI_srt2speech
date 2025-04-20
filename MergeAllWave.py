@@ -55,8 +55,9 @@ class MergeAllWave:
     def merge_all(self, srt_file):
         base_path = os.path.dirname(os.path.abspath(__file__))
         audio_out_path = os.path.join(base_path, "assets", "audio_out")
-        merge_output_path = os.path.join(base_path, "assets", "merged_all.wav")
         srt_path = os.path.join(base_path, "assets", "srt_uploads", srt_file)
+        srt_base = os.path.splitext(srt_file)[0]
+        merge_output_path = os.path.join(base_path, "assets", f"merged__{srt_base}.wav")
 
         entries = self.parse_srt(srt_path)
         merged = AudioSegment.silent(duration=0)
@@ -71,7 +72,7 @@ class MergeAllWave:
                 continue
 
             start, _ = match.group(1), match.group(2)
-            prefix = self.format_prefix(start)  # ✅ ตรงกับชื่อไฟล์ใน audio_out
+            prefix = self.format_prefix(start)
 
             try:
                 audio_file = next(f for f in os.listdir(audio_out_path) if f.startswith(prefix))
