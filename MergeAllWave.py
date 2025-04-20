@@ -77,7 +77,7 @@ class MergeAllWave:
             try:
                 audio_file = next(
                     f for f in os.listdir(audio_out_path)
-                    if re.match(rf"^{re.escape(prefix)}_to_.*\.wav$", f)
+                    if prefix in f
                 )
                 seg = AudioSegment.from_file(os.path.join(audio_out_path, audio_file))
                 merged += seg
