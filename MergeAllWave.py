@@ -5,8 +5,8 @@ from pydub import AudioSegment
 class MergeAllWave:
     @classmethod
     def INPUT_TYPES(cls):
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        srt_dir = os.path.join(base_path, "assets", "srt_uploads")
+        assets_path = os.path.dirname(os.path.abspath(__file__))
+        srt_dir = os.path.join(assets_path, "assets", "srt_uploads")
         srt_files = [f for f in os.listdir(srt_dir) if f.endswith(".srt")]
         srt_files.sort()
         return {
@@ -21,11 +21,17 @@ class MergeAllWave:
     CATEGORY = "📺 Subtitle Tools"
 
     def format_prefix(self, t):
-        """Convert timestamp to match file prefix: 00_00_01s300ms"""
+        """Convert timestamp to match file prefix: 00_00_1s300ms"""
         t = t.replace(",", ".")
         h, m, s = t.split(":")
         s, ms = s.split(".")
         return f"{int(h):02}_{int(m):02}_{int(s)}s{int(ms)}ms"
+
+    def get_seconds(self, t):
+        t = t.replace(",", ".")
+        h, m, s = t.split(":")
+        s, ms = s.split(".")
+        return int(h) * 3600 + int(m) * 60 + int(s) + int(ms) / 1000
 
     def parse_srt(self, srt_path):
         with open(srt_path, 'r', encoding='utf-8') as f:
@@ -65,7 +71,7 @@ class MergeAllWave:
                 continue
 
             start, _ = match.group(1), match.group(2)
-            prefix = f"00_00_{self.format_prefix(start)}"  # ✅ now matches the real filenames
+            prefix = self.format_prefix(start)
 
             try:
                 audio_file = next(f for f in os.listdir(audio_out_path) if f.startswith(prefix))
