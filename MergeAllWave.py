@@ -1,3 +1,7 @@
+import os
+import re
+from pydub import AudioSegment
+
 class MergeAllWave:
     @classmethod
     def INPUT_TYPES(cls):
@@ -67,7 +71,7 @@ class MergeAllWave:
                 continue
 
             start, _ = match.group(1), match.group(2)
-            prefix = self.format_prefix(start)  # ✅ ตรงกับชื่อไฟล์จริง
+            prefix = self.format_prefix(start)
 
             try:
                 audio_file = next(f for f in os.listdir(audio_out_path) if f.startswith(prefix))
