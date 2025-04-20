@@ -2,6 +2,7 @@ from .SaveWavNode import SaveWavNode
 from .GetSubtitleByIndex import GetSubtitleByIndex
 from .MergeSubtitleAudio import MergeSubtitleAudio, ListSavedAudioFiles
 from .MergeSelectedAudioFiles import MergeSelectedAudioFiles
+from .MergeAllWave import MergeAllWave  # ✅ เพิ่มใหม่
 
 import os
 
@@ -20,6 +21,7 @@ NODE_CLASS_MAPPINGS = {
     "MergeSubtitleAudio": MergeSubtitleAudio,
     "ListSavedAudioFiles": ListSavedAudioFiles,
     "MergeSelectedAudioFiles": MergeSelectedAudioFiles,
+    "MergeAllWave": MergeAllWave,  # ✅ map คลาสใหม่
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -28,10 +30,12 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "MergeSubtitleAudio": "Merge Subtitle Audio - do not use",
     "ListSavedAudioFiles": "List Saved Audio Files - do not use",
     "MergeSelectedAudioFiles": "Merge Selected Audio Files - do not use",
+    "MergeAllWave": "Merge All Wave",  # ✅ แสดงชื่อใน UI
 }
 
 WEB_DIRECTORY = "./web"
 
+# ✅ เฉพาะ patch MergeSubtitleAudio เท่านั้น
 if hasattr(MergeSubtitleAudio, "INPUT_TYPES"):
     original_input_types = MergeSubtitleAudio.INPUT_TYPES
     def patched_input_types(cls):
