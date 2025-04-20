@@ -72,10 +72,13 @@ class MergeAllWave:
                 continue
 
             start, _ = match.group(1), match.group(2)
-            prefix = self.format_prefix(start)
+            prefix = self.format_prefix(start)  # ✅ Correctly formatted prefix
 
             try:
-                audio_file = next(f for f in os.listdir(audio_out_path) if f.startswith(prefix))
+                audio_file = next(
+                    f for f in os.listdir(audio_out_path)
+                    if f.startswith(prefix)
+                )
                 seg = AudioSegment.from_file(os.path.join(audio_out_path, audio_file))
                 merged += seg
             except StopIteration:
