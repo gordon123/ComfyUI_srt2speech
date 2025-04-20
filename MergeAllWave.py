@@ -1,7 +1,3 @@
-import os
-import re
-from pydub import AudioSegment
-
 class MergeAllWave:
     @classmethod
     def INPUT_TYPES(cls):
@@ -20,11 +16,12 @@ class MergeAllWave:
     FUNCTION = "merge_all"
     CATEGORY = "📺 Subtitle Tools"
 
-    def format_timestamp(self, t):
+    def format_prefix(self, t):
+        """Convert timestamp to match file prefix: 00_00_01s300ms"""
         t = t.replace(",", ".")
         h, m, s = t.split(":")
         s, ms = s.split(".")
-        return f"{int(h):02}:{int(m):02}:{int(s)}s{int(ms)}ms"
+        return f"{int(h):02}_{int(m):02}_{int(s)}s{int(ms)}ms"
 
     def get_seconds(self, t):
         t = t.replace(",", ".")
@@ -70,40 +67,14 @@ class MergeAllWave:
                 continue
 
             start, _ = match.group(1), match.group(2)
-            prefix = start.replace(",", "_").replace(":", "_").replace(".", "s")
+            prefix = self.format_prefix(start)  # ✅ ตรงกับชื่อไฟล์จริง
+
             try:
                 audio_file = next(f for f in os.listdir(audio_out_path) if f.startswith(prefix))
                 seg = AudioSegment.from_file(os.path.join(audio_out_path, audio_file))
                 merged += seg
             except StopIteration:
-                print(f"[DEBUG] No match for {start} → skipping")
+                print(f"[DEBUG] No match for {start} (prefix: {prefix}) → skipping")
 
         merged.export(merge_output_path, format="wav")
         return (merge_output_path,)
-
-
-# Optional utility (ยังใช้ได้ใน workflow)
-class ListSavedAudioFiles:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {"required": {}}
-
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("file_list",)
-    FUNCTION = "list_files"
-    CATEGORY = "📁 Debug Tools"
-
-    def list_files(self):
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        audio_dir = os.path.join(base_path, "assets", "audio_out")
-
-        if not os.path.exists(audio_dir):
-            return ("[ERROR] audio_out directory not found",)
-
-        files = [f for f in os.listdir(audio_dir) if f.endswith(".wav")]
-        files.sort()
-
-        if not files:
-            return ("[DEBUG] No .wav files found in audio_out",)
-
-        return ("\n".join(files),)
