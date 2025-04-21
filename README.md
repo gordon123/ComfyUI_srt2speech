@@ -1,3 +1,5 @@
+[![ดูคลิปนี้บน YouTube](https://img.youtube.com/vi/pXEbXhNceUo/hqdefault.jpg)](https://youtu.be/pXEbXhNceUo)
+
 # ComfyUI_srt2speech
 This repo is my first Custom node with my very basic knowledge of coding, ComfyUI_srt2speech​ <br> 
 I tested my srt2speech with other ComfyUI_MegaTTS custom node on the Runpod, with ComfyUI native installing. <br>  
