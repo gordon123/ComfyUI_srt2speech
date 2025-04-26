@@ -1,0 +1,15 @@
+[project]
+name = "srt2speech"
+description = "This repo need to use with any TTS, check my video tutorial here https://youtu.be/pXEbXhNceUo?si=yC2h3SE-cWqKN2bz"
+version = "1.0.0"
+license = {file = "LICENSE"}
+dependencies = ["torch>=2.0.0", "torchaudio>=2.0.0", "inflect", "pydub", "ffmpeg-python"]
+
+[project.urls]
+Repository = "https://github.com/gordon123/ComfyUI_srt2speech"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = "iimate24"
+DisplayName = "ComfyUI_srt2speech"
+Icon = ""
