@@ -1,5 +1,5 @@
 [project]
-name = "srt2speech"
+name = "ComfyUI_srt2speech"
 description = "This repo need to use with any TTS, check my video tutorial here https://youtu.be/pXEbXhNceUo?si=yC2h3SE-cWqKN2bz"
 version = "1.0.0"
 license = {file = "LICENSE"}
