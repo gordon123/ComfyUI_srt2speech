@@ -1,7 +1,7 @@
 [project]
 name = "ComfyUI_srt2speech"
 description = "This repo need to use with any TTS, it will be automate subtitle.srt for TTS, check it out from my video tutorial here https://youtu.be/pXEbXhNceUo?si=yC2h3SE-cWqKN2bz""
-version = "1.0.0"
+version = "1.0.1"
 license = {file = "LICENSE"}
 
 dependencies = ["torch>=2.0.0", "torchaudio>=2.0.0", "inflect", "pydub", "ffmpeg-python"]
