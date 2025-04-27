@@ -16,7 +16,7 @@ This instruction for myself is using [Runpod.com Gpu cloud service](https://runp
 2. Go to custom node,
    
 ```
-pip install -r requirements.ext
+pip install -r requirements.txt
 ```
    
 3. Install ffmpeg, ffmprobe
