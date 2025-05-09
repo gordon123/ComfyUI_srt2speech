@@ -1,16 +1,27 @@
-[project]
-name = "ComfyUI_srt2speech"
-description = "This repo need to use with any TTS, it will be automate subtitle.srt for TTS, check it out from my video tutorial here https://youtu.be/pXEbXhNceUo?si=yC2h3SE-cWqKN2bz""
-version = "1.0.1"
-license = {file = "LICENSE"}
+name: Publish to Comfy registry
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "pyproject.toml"
 
-dependencies = ["torch>=2.0.0", "torchaudio>=2.0.0", "inflect", "pydub", "ffmpeg-python"]
+permissions:
+  issues: write
 
-[project.urls]
-Repository = "https://github.com/gordon123/ComfyUI_srt2speech"
-#  Used by Comfy Registry https://comfyregistry.org
-
-[tool.comfy]
-PublisherId = "aiimate24"
-DisplayName = "ComfyUI_srt2speech"
-Icon = ""
+jobs:
+  publish-node:
+    name: Publish Custom Node to registry
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'gordon123' }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Publish Custom Node
+        uses: Comfy-Org/publish-node-action@v1
+        with:
+          personal_access_token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
